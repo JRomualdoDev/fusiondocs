@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Sidebar from "./components/sidebar/page";
 import { sideMenu } from "./components/sidebar/sideMenu";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,11 +21,12 @@ export default function RootLayout({
     <html lang="pt-br">
       <body className={inter.className}>
         <div className="flex w-full min-h-screen max-h-screen">
-  
+ 
             <Sidebar menus={sideMenu}/>
           <div>
             {children}
           </div>
+          <Toaster />
         </div>
       </body>
     </html>

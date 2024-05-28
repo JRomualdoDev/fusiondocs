@@ -9,7 +9,10 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { SidebarProps } from "./sidebar";
 import { useState } from "react";
 
+import { toast } from "sonner"
+
 import {
+    FolderClosed,
     FileText,
     Check,
     X,
@@ -21,69 +24,82 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion"
-
-
+} from "@/components/ui/accordion";
+import { handler } from "@/app/components/sidebar/createFile/create";
 
 
 function Sidebar({ className, menus }: SidebarProps) {
 
     const [itemMenu, setItemMenu] = useState("");
     const [subItemMenu, setSubItemMenu] = useState("");
+    const [inputContent, setInputContent] = useState("");
     
     function fileCreate(menuLabel: string) {
 
-        let newSubItemMenu = '';
+        if(inputContent === '') {
+            emptyFields();
+            return;
+        }
+
+        let tempItemSubMenu = '';
         let tempItemMenu ='';
 
         // Passar o nome do item para o menu
-        if(itemMenu === '') {
-            tempItemMenu = menuLabel;
-        }
-        else {
-            tempItemMenu = itemMenu;
-        }
+        itemMenu === '' ? tempItemMenu = menuLabel : tempItemMenu = itemMenu;
+        
+        if(subItemMenu !== '') tempItemSubMenu = subItemMenu;
 
-        if(subItemMenu !== '') {
-            // Inserir o novo item no submenu
-            // newSubItemMenu = `{
-            //     label: "${subItemMenu}",
-            //     link: "/${itemMenu}/${subItemMenu}",
-            // },`;
-            newSubItemMenu = subItemMenu;
-        }
+        // Cria menu
+        file(tempItemMenu , tempItemSubMenu, 'create').then(data => console.log(data));
 
-        file(tempItemMenu , newSubItemMenu, 'create').then(data => console.log(data));
+        console.log(tempItemMenu)
+        console.log(tempItemSubMenu)
+
+        // Cria somente se for subMenu
+        if(tempItemSubMenu !== '')
+        {
+            // Cria a página
+            handler(`${tempItemMenu}/${tempItemSubMenu}`);           
+        }
     }
 
     function fileDelete(menuLabel: string) {
+
+        if(inputContent === '') {
+            emptyFields();
+            return;
+        }
+
         let newSubItemMenu = '';
         let tempItemMenu = '';
 
         // Passar o nome do item para o menu
-        if(itemMenu === '') {
-            tempItemMenu = menuLabel;
-        }
-        else {
-            tempItemMenu = itemMenu;
-        }
+        itemMenu === "" ? tempItemMenu = menuLabel : tempItemMenu = itemMenu;
 
-        if(subItemMenu !== '') {
-            newSubItemMenu = subItemMenu;
-        }
+        if(subItemMenu !== '') newSubItemMenu = subItemMenu
 
-        console.log(tempItemMenu)
-        console.log(newSubItemMenu)
         file(tempItemMenu , newSubItemMenu, 'delete').then(data => console.log(data));
     }
-
+    
     function handleSubItemMenu(event: React.ChangeEvent<HTMLInputElement>) {
         setSubItemMenu(event.target.value);
+        setInputContent(event.target.value);
     }
 
     function handleItemMenu(event: React.ChangeEvent<HTMLInputElement>) {
         setItemMenu(event.target.value);
+        setInputContent(event.target.value);
         setSubItemMenu('');
+    }
+
+    function emptyFields() {
+        toast("Por Favor preencha o campo", {
+            description: "Campo Vazio",
+            action: {
+                label: "Fechar",
+                onClick: () => console.log("Fechar"),
+            },
+        });
     }
 
     const pathname = usePathname()
@@ -94,20 +110,8 @@ function Sidebar({ className, menus }: SidebarProps) {
                 <div className="py-2">
                     <ScrollArea className="min-h-[300px] max-h-screen px-2">
                         <div className="space-y-1 p-2 h-[calc(100vh-28px)]">
-                            {/* <Link
-                                className={`${buttonVariants({
-                                size: "sm",
-                                variant: pathname === "/dashboard" ? "default" : "ghost",
-                                //align: "flexLeft",
-                                })}`}
-                                href={"/dashboard"}
-                            >
-                                <span className="inline-flex items-center justify-center gap-1">
-                                <FileText className="w-4 h-4" /> Dashboard
-                                </span>
-                            </Link> */}
                             <div className="mb-8">
-                                <span>Logo</span>
+                                <img src="/logo.png" className="w-[300px] h-12 border bg-background" alt="logo" />
                             </div>
                             {menus?.map((menu, i) => {
                                 // if (menu.isParent === false && menu.link === "javascript:;" && menu.icon === undefined) {
@@ -121,13 +125,9 @@ function Sidebar({ className, menus }: SidebarProps) {
                                 } else if (menu.isParent && menu.link !== "javascript::") {
                                 return (
                                     <Accordion
-                                    key={`${menu}-${i}`}
-                                    type="single"
-                                    collapsible
-                                    // onValueChange={(value)=>{
-                                    //     setItemMenu(menu.label)
-                                    //     console.log(menu.label)
-                                    // }}
+                                        key={`${menu}-${i}`}
+                                        type="single"
+                                        collapsible
                                     >
                                     <AccordionItem value={`item-${i}`} className="border-b-0">
                                         <AccordionTrigger
@@ -138,24 +138,29 @@ function Sidebar({ className, menus }: SidebarProps) {
                                                 className: "hover:no-underline items-center justify-start",
                                             })}
                                         >
-                                        <span className="inline-flex  gap-1">
+                                        <span className="inline-flex gap-1 gap-x-2 items-center justify-center">
                                             {/* {menu.icon} {menu.label} */}
-                                            <FileText className="w-4 h-4"/> {menu.label}
+                                            <FolderClosed className="w-4 h-4"/> 
+                                            {menu.label}
                                         </span>
                                         </AccordionTrigger>
                                         <AccordionContent>
                                         {menu.subMenu?.map((subItem, subIndex) => (
-                                            <Button
-                                                key={`${subIndex}-${i}`}
-                                                variant="ghost"
-                                                size="sm"
-                                                className="w-full justify-start font-normal"
-                                            >
-                                            &mdash; {subItem.label}
-                                            </Button>
+                                            <Link href={subItem.link}>
+                                                <Button
+                                                    key={`${subIndex}-${i}`}
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    className="w-full justify-start font-normal gap-x-2 ps-6"
+                                                >
+                                                    <FileText className="w-4 h-4"/>
+                                                    
+                                                    {subItem.label}                                               
+                                                </Button>
+                                            </Link>
                                         ))}
-                                        <div className="flex flex-col items-center justify-center gap-2">
-                                            <h3 className="pe-4">Sub Menu</h3>
+                                        <div className="flex flex-col items-center justify-center gap-2  border bg-background p-2 mt-1">
+                                            <h3 className="pe-4">Adicionar Sub Menu</h3>
                                             <div className="inline-flex gap-1 px-2 items-center">
                                                 <Input 
                                                     className="w-[40px]} h-8"
@@ -202,8 +207,8 @@ function Sidebar({ className, menus }: SidebarProps) {
                                 }
                             })}
 
-                            <div className="flex flex-col items-center justify-center gap-2">
-                                <h3 className="pe-4">Item Menu</h3>
+                            <div className="flex flex-col items-center justify-center gap-2 border bg-background p-2">
+                                <h3 className="pe-4">Adicionar Item Menu</h3>
                                 <div className="inline-flex gap-1 px-2 items-center">
                                     <Input 
                                         className="w-[40px]} h-8"

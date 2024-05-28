@@ -1,22 +1,110 @@
 import { NavItems } from "./sidebar";
         export const sideMenu: NavItems[] = [
   {
+    "label": "icaro",
+    "link": "/icaro",
+    "isParent": true,
+    "subMenu": [
+      {
+        "label": "teste1",
+        "link": "/icaro/teste1"
+      }
+    ]
+  },
+  {
+    "label": "carro",
+    "link": "/carro",
+    "isParent": true,
+    "subMenu": [
+      {
+        "label": "caminhao",
+        "link": "/carro/caminhao"
+      }
+    ]
+  },
+  {
+    "label": "ar",
+    "link": "/ar",
+    "isParent": true,
+    "subMenu": [
+      {
+        "label": "acv",
+        "link": "/ar/acv"
+      }
+    ]
+  },
+  {
+    "label": "abc",
+    "link": "/abc",
+    "isParent": true,
+    "subMenu": []
+  },
+  {
+    "label": "aaaaa",
+    "link": "/aaaaa",
+    "isParent": true,
+    "subMenu": []
+  },
+  {
+    "label": "abac",
+    "link": "/abac",
+    "isParent": true,
+    "subMenu": []
+  },
+  {
+    "label": "care",
+    "link": "/care",
+    "isParent": true,
+    "subMenu": []
+  },
+  {
+    "label": "brac",
+    "link": "/brac",
+    "isParent": true,
+    "subMenu": [
+      {
+        "label": "dfa",
+        "link": "/brac/dfa"
+      },
+      {
+        "label": "abvdcd",
+        "link": "/brac/abvdcd"
+      }
+    ]
+  },
+  {
+    "label": "abn",
+    "link": "/abn",
+    "isParent": true,
+    "subMenu": [
+      {
+        "label": "fdafasfsa",
+        "link": "/abn/fdafasfsa"
+      },
+      {
+        "label": "fdsafas",
+        "link": "/abn/fdsafas"
+      }
+    ]
+  },
+  {
     "label": "car",
     "link": "/car",
     "isParent": true,
-    "subMenu": []
-  },
-  {
-    "label": "",
-    "link": "/",
-    "isParent": true,
-    "subMenu": []
-  },
-  {
-    "label": "",
-    "link": "/",
-    "isParent": true,
-    "subMenu": []
+    "subMenu": [
+      {
+        "label": "car4",
+        "link": "/car/car4"
+      },
+      {
+        "label": "car3",
+        "link": "/car/car3"
+      },
+      {
+        "label": "car2",
+        "link": "/car/car2"
+      }
+    ]
   },
   {
     "label": "fdafasf",
@@ -29,6 +117,18 @@ import { NavItems } from "./sidebar";
     "link": "/car",
     "isParent": true,
     "subMenu": [
+      {
+        "label": "car4",
+        "link": "/car/car4"
+      },
+      {
+        "label": "car3",
+        "link": "/car/car3"
+      },
+      {
+        "label": "car2",
+        "link": "/car/car2"
+      },
       {
         "label": "fdasfasdf",
         "link": "//fdasfasdf"
@@ -54,45 +154,6 @@ import { NavItems } from "./sidebar";
     "subMenu": []
   },
   {
-    "label": "",
-    "link": "/",
-    "isParent": true,
-    "subMenu": [
-      {
-        "label": "fdafdas",
-        "link": "//fdafdas"
-      },
-      {
-        "label": "fdasfdas",
-        "link": "//fdasfdas"
-      },
-      {
-        "label": "fdasfas",
-        "link": "//fdasfas"
-      },
-      {
-        "label": "faf",
-        "link": "//faf"
-      },
-      {
-        "label": "fgafd",
-        "link": "//fgafd"
-      },
-      {
-        "label": "fdsa",
-        "link": "//fdsa"
-      },
-      {
-        "label": "gfgdsgf",
-        "link": "//gfgdsgf"
-      },
-      {
-        "label": "fdsa",
-        "link": "//fdsa"
-      }
-    ]
-  },
-  {
     "label": "Master Korcam",
     "link": "/dashboard/master-korcam",
     "isParent": false
@@ -103,8 +164,8 @@ import { NavItems } from "./sidebar";
     "isParent": true,
     "subMenu": [
       {
-        "label": "fdafd",
-        "link": "//fdafd"
+        "label": "tester",
+        "link": "/Settings/tester"
       },
       {
         "label": "Profile",
