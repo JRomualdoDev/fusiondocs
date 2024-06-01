@@ -20,10 +20,11 @@ export default function RootLayout({
   return (
     <html lang="pt-br">
       <body className={inter.className}>
-        <div className="flex w-full min-h-screen max-h-screen">
- 
-            <Sidebar menus={sideMenu}/>
-          <div>
+        <div className="inline-flex w-full">
+
+          {/* <Sidebar menus={sideMenu}/> */}
+          <Sidebar />
+          <div className="flex flex-col sm:gap-4 sm:pt-4 sm:pl-10 sm:pr-5 w-full h-full items-center">
             {children}
           </div>
           <Toaster />
