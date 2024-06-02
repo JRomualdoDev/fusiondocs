@@ -13,7 +13,7 @@ export async function createSubMenu(item: string, subItem: string = '', action: 
 
     // Defina o caminho para a nova pasta e arquivo
     const folderPath = path.join(process.cwd(), 'src/app/bd', item);
-    const filePath = path.join(folderPath, `banco.json`);
+    const filePath = path.join(folderPath, `${item}.json`);
 
     // Pega do load as informaçoes do menu
     const menu = await loadMenu();
@@ -25,7 +25,7 @@ export async function createSubMenu(item: string, subItem: string = '', action: 
             console.log('Item Encontrado')
             menuItem.subMenu.unshift({
                 label: subItem,
-                link: `/http/show/${subItem}`,
+                link: `/http/show/${item}/${subItem}`,
             });
             console.log(menuItem)
             let json = JSON.stringify(menuItem);
@@ -33,6 +33,6 @@ export async function createSubMenu(item: string, subItem: string = '', action: 
             fs.writeFileSync(filePath, json);
         }
     })
-    return 'ok';
+    return 'SubMenu Criado com sucesso.';
 }
 

@@ -17,7 +17,7 @@ export async function loadMenu() {
     for (const folder of files) {
         // Não crie o path caso bd.json(banco de dados do editorjs)
         if (folder !== 'banco.json') {
-            const jsonFilePath = path.join(bdPath, folder, `banco.json`);
+            const jsonFilePath = path.join(bdPath, folder, `${folder}.json`);
             // Le o arquivo
             try {
                 const jsonData = await fs.readFile(jsonFilePath, 'utf8');

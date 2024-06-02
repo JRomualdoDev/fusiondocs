@@ -14,7 +14,7 @@ export async function handler(folderName: string, fileName: string = "banco") {
 
     // Defina o caminho para a nova pasta e arquivo
     const folderPath = path.join(process.cwd(), 'src/app/bd', folderName);
-    const filePath = path.join(folderPath, `${fileName}.json`);
+    const filePath = path.join(folderPath, `${folderName}.json`);
 
     console.log('Caminho da pasta:', folderPath);
     console.log('Caminho do arquivo:', filePath);
