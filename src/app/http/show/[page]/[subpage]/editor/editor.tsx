@@ -27,7 +27,7 @@ const RenderEditor = (ElementId: string, page: any) => {
       // Load Dados Iniciais
       const fetchData = async () => {
         dataInit = await initData(page);
-        console.log(dataInit)
+
         // Aqui chamamos a execução do EditorJS e também podemos passar os parâmetros necessários para execução
         editor = new EditorJS({
           holder: ElementId,

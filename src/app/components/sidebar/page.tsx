@@ -6,7 +6,9 @@ import { createSubMenu } from "./createSubMenu";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator"
 import { toast } from "sonner";
+
 import { useEffect, useState } from "react";
 
 import { loadMenu } from "./loadMenu"
@@ -17,6 +19,10 @@ import {
     FileText,
     Check,
     X,
+    FolderPlus,
+    FilePlus,
+    Plus,
+    SquarePlus,
 
 } from "lucide-react";
 
@@ -37,6 +43,8 @@ function Sidebar() {
     const [inputContent, setInputContent] = useState("");
     const [menu, setMenu] = useState([]);
     const [refreshMenu, setRefreshMenu] = useState(false);
+    const [iconHoverMenu, setIconHoverMenu] = useState(false);
+    const [iconHoverSubMenu, setIconHoverSubMenu] = useState(false);
 
     function fileCreate(menuLabel: string) {
 
@@ -85,15 +93,15 @@ function Sidebar() {
         //file(tempItemMenu , newSubItemMenu, 'delete').then(data => console.log(data));
     }
 
-    function handleSubItemMenu(event: React.ChangeEvent<HTMLInputElement>) {
-        setSubItemMenu(event.target.value);
-        setInputContent(event.target.value);
-    }
-
     function handleItemMenu(event: React.ChangeEvent<HTMLInputElement>) {
         setItemMenu(event.target.value);
         setInputContent(event.target.value);
         setSubItemMenu('');
+    }
+
+    function handleSubItemMenu(event: React.ChangeEvent<HTMLInputElement>) {
+        setSubItemMenu(event.target.value);
+        setInputContent(event.target.value);
     }
 
     function emptyFields() {
@@ -108,14 +116,10 @@ function Sidebar() {
 
     useEffect(() => {
         loadMenu().then((menu: any) => {
-            console.log(menu);
             setMenu(menu);
         });
 
     }, [refreshMenu]);
-
-
-
 
     const pathname = usePathname()
 
@@ -131,14 +135,12 @@ function Sidebar() {
                             </div>
                             {
                                 menu.map((menu: any, i: any) => {
-                                    // if (menu.isParent === false && menu.link === "javascript:;" && menu.icon === undefined) {
                                     if (menu.isParent === false && menu.link === "javascript:;") {
                                         return <strong
                                             key={`${menu}-${i}`}
                                             className="font-bold inline-flex items-start justify-start text-xs text-gray-700 dark:text-gray-400"
                                         >{menu.label}
                                         </strong>
-                                        // } else if (menu.isParent && menu.link !== "javascript::" && menu.icon !== undefined) {
                                     } else if (menu.isParent && menu.link !== "javascript::") {
                                         return (
                                             <Accordion
@@ -161,7 +163,10 @@ function Sidebar() {
                                                             {menu.label}
                                                         </span>
                                                     </AccordionTrigger>
-                                                    <AccordionContent>
+                                                    <AccordionContent
+                                                        onMouseEnter={() => setIconHoverSubMenu(true)}
+                                                        onMouseLeave={() => setIconHoverSubMenu(false)}
+                                                    >
                                                         {menu.subMenu?.map((subItem: any, subIndex: any) => (
                                                             <Link
                                                                 key={`${subIndex}-${i}`}
@@ -178,27 +183,42 @@ function Sidebar() {
                                                                 </Button>
                                                             </Link>
                                                         ))}
-                                                        <div className="flex flex-col items-center justify-center gap-2  border bg-background p-2 mt-1">
-                                                            <h3 className="pe-4">Adicionar Sub Menu</h3>
+                                                        <div className="flex flex-col items-center justify-center gap-2  bg-background p-2 mt-1">
+                                                            {/* <h3 className="pe-4">Adicionar Sub Menu</h3> */}
                                                             <div className="inline-flex gap-1 px-2 items-center">
                                                                 <Input
-                                                                    className="w-[40px]} h-8"
+                                                                    className="w-[40px]} h-6"
                                                                     onChange={handleSubItemMenu}
+                                                                    placeholder="Add SubMenu"
                                                                 />
-                                                                <Button
-                                                                    variant="outline"
-                                                                    className="w-[50px] justify-start font-normal bg-green-500 text-white hover:bg-green-600"
-                                                                    onClick={() => fileCreate(menu.label)}
-                                                                >
-                                                                    <Check className="w-8 h-8" />
-                                                                </Button>
-                                                                <Button
-                                                                    variant="outline"
-                                                                    className="w-[50px] justify-start font-normal bg-red-500 text-white hover:bg-red-600"
-                                                                    onClick={() => fileDelete(menu.label)}
-                                                                >
-                                                                    <X className="w-5 h-5" />
-                                                                </Button>
+                                                                {
+                                                                    iconHoverSubMenu && (
+                                                                        <SquarePlus
+                                                                            className="w-4 h-4 text-green-700 hover:text-green-400 ms-2 hover:cursor-pointer"
+                                                                            onClick={() => fileCreate(menu.label)}
+                                                                        />
+                                                                    )
+                                                                }
+
+
+                                                                {/* <Input
+                                                                            className="w-[40px]} h-8"
+                                                                            onChange={handleSubItemMenu}
+                                                                        />
+                                                                        <Button
+                                                                            variant="outline"
+                                                                            className="w-[50px] justify-start font-normal bg-green-500 text-white hover:bg-green-600"
+                                                                            onClick={() => fileCreate(menu.label)}
+                                                                        >
+                                                                            <Check className="w-8 h-8" />
+                                                                        </Button>
+                                                                        <Button
+                                                                            variant="outline"
+                                                                            className="w-[50px] justify-start font-normal bg-red-500 text-white hover:bg-red-600"
+                                                                            onClick={() => fileDelete(menu.label)}
+                                                                        >
+                                                                            <X className="w-5 h-5" />
+                                                                        </Button> */}
                                                             </div>
                                                         </div>
 
@@ -226,27 +246,34 @@ function Sidebar() {
                                     }
                                 })
                             }
-                            <div className="flex flex-col items-center justify-center gap-2 border bg-background p-2">
-                                <h3 className="pe-4">Adicionar Item Menu</h3>
-                                <div className="inline-flex gap-1 px-2 items-center">
+                            <div
+                                className="flex flex-col items-center justify-center gap-2 p-2 mt-4"
+                                onMouseEnter={() => setIconHoverMenu(true)}
+                                onMouseLeave={() => setIconHoverMenu(false)}
+                            >
+                                {/* <h3 className="pe-4">Adicionar Item Menu</h3> */}
+                                <Separator />
+                                <div className="inline-flex gap-1 px-2 items-center mt-2">
                                     <Input
-                                        className="w-[40px]} h-8"
+                                        className="w-[40px]} h-6"
                                         onChange={handleItemMenu}
+                                        placeholder="Add Menu"
                                     />
-                                    <Button
-                                        variant="outline"
-                                        className="w-[50px] justify-start font-normal bg-green-500 text-white hover:bg-green-600"
-                                        onClick={() => fileCreate('')}
-                                    >
-                                        <Check className="w-8 h-8" />
-                                    </Button>
-                                    <Button
+                                    {
+                                        iconHoverMenu &&
+                                        <FolderPlus
+                                            className="w-6 h-6 text-green-700 hover:text-green-400 ms-2 hover:cursor-pointer"
+                                            onClick={() => fileCreate('')}
+                                        />
+                                    }
+
+                                    {/* <Button
                                         variant="outline"
                                         className="w-[50px] justify-start font-normal bg-red-500 text-white hover:bg-red-600"
                                         onClick={() => fileDelete('')}
                                     >
                                         <X className="w-5 h-5" />
-                                    </Button>
+                                    </Button> */}
                                 </div>
                             </div>
                         </div>
