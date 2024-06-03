@@ -23,7 +23,11 @@ export async function saveFile(file: string, page: page) {
 
                 // Menuitem igual nome da subPage
                 if (subMenuItem.label === page.subpage) {
-                    menuItem.content = file;
+                    // Add item submenu
+                    subMenuItem.content = file;
+                    // Add menu o submenu modificado
+                    menuItem.subMenu = menuItem.subMenu;
+
                     let json = JSON.stringify(menuItem);
                     // Escreve o conteúdo no arquivo
                     fs.writeFileSync(filepath, json);
@@ -31,7 +35,7 @@ export async function saveFile(file: string, page: page) {
                 }
             })
         }
-    })
+    });
 
     return message;
 }

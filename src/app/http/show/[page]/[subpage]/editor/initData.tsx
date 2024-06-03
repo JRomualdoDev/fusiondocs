@@ -26,9 +26,15 @@ export async function initData(page: page) {
             console.log(urlArray[3])
             console.log(page.page)
             console.log(page.subpage)
+            console.log(typeof submenu)
 
             if (urlArray[2] === page.page && urlArray[3] === page.subpage) {
-                initData = data.content;
+                for (let [key, value] of Object.entries(submenu)) {
+                    console.log(key, value)
+                    if (value === page.subpage) {
+                        initData = submenu.content;
+                    }
+                }
             }
         })
     })

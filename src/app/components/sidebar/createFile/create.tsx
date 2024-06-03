@@ -5,10 +5,11 @@ import fs from 'fs';
 import path from 'path';
 import { loadMenu } from '../loadMenu';
 
-export async function handler(folderName: string, fileName: string = "banco") {
+export async function handler(folderName: string) {
+  let message: string = '';
   try {
     // Verifica se os nomes da pasta e do arquivo são válidos
-    if (!folderName || !fileName) {
+    if (!folderName) {
       return;
     }
 
@@ -24,6 +25,9 @@ export async function handler(folderName: string, fileName: string = "banco") {
       fs.mkdirSync(folderPath, { recursive: true });
       console.log('Pasta criada:', folderPath);
     }
+    else {
+      throw new Error('Pasta já existe.');
+    }
 
     // Cria conteúdo inicial do arquivo
     const fileContent = `
@@ -36,8 +40,14 @@ export async function handler(folderName: string, fileName: string = "banco") {
 
     // Escreve o conteúdo no arquivo
     fs.writeFileSync(filePath, fileContent);
-    console.log('Arquivo criado:', filePath);
-  } catch (error) {
-    console.error('Erro ao criar pasta ou arquivo:', error);
+
+    // Message Sucesso
+    message = 'Pasta criada com sucesso.';
+
+  } catch (error: any) {
+    message = error.message;
   }
+  return message;
 }
+
+

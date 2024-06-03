@@ -64,11 +64,27 @@ function Sidebar() {
         // Cria o menu primeira vez
         if (tempItemSubMenu === '') {
             // Cria a pasta e o arquivo
-            handler(`${tempItemMenu}`);
+            handler(`${tempItemMenu}`).then((data) => {
+                toast("Criação Pasta.", {
+                    description: data,
+                    action: {
+                        label: "Fechar",
+                        onClick: () => console.log("Fechar"),
+                    },
+                });
+            });
         }
         else {
             // Cria subMenu
-            createSubMenu(tempItemMenu, tempItemSubMenu, 'create').then(data => console.log(data));
+            createSubMenu(tempItemMenu, tempItemSubMenu, 'create').then((data) => {
+                toast("Criação SubPasta.", {
+                    description: data,
+                    action: {
+                        label: "Fechar",
+                        onClick: () => console.log("Fechar"),
+                    },
+                });
+            });
         }
 
         // Atualiza o menu
