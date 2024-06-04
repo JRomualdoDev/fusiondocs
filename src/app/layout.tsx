@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Sidebar from "./components/sidebar/page";
-import { sideMenu } from "./components/sidebar/sideMenu";
 import { Toaster } from "@/components/ui/sonner";
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,7 +24,7 @@ export default function RootLayout({
 
           {/* <Sidebar menus={sideMenu}/> */}
           <Sidebar />
-          <div className="flex flex-col sm:gap-4 sm:pt-4 sm:pl-10 sm:pr-5 w-full h-full items-center">
+          <div className="flex flex-col w-full h-full items-center">
             {children}
           </div>
           <Toaster />

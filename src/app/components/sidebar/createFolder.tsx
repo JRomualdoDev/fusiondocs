@@ -3,7 +3,7 @@
 // pages/api/createFile.ts
 import fs from 'fs';
 import path from 'path';
-import { loadMenu } from '../loadMenu';
+import { loadMenu } from './loadMenu';
 
 export async function handler(folderName: string) {
   let message: string = '';
@@ -15,7 +15,7 @@ export async function handler(folderName: string) {
 
     // Defina o caminho para a nova pasta e arquivo
     const folderPath = path.join(process.cwd(), 'src/app/bd', folderName);
-    const filePath = path.join(folderPath, `${folderName}.json`);
+    const filePath = path.join(folderPath, `index.json`);
 
     console.log('Caminho da pasta:', folderPath);
     console.log('Caminho do arquivo:', filePath);

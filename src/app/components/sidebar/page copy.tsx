@@ -26,7 +26,7 @@ import {
     AccordionItem,
     AccordionTrigger,
 } from "@/components/ui/accordion";
-import { handler } from "./createFile/create";
+import { handler } from "./createFolder";
 
 
 // function Sidebar({ className, menus }: SidebarProps) {

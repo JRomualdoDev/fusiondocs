@@ -11,6 +11,8 @@ import { Button } from '@/components/ui/button';
 import { saveFile } from './saveFile';
 
 import { initData } from './initData';
+import { toast } from 'sonner';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 // Editor variável
 let editor: any;
@@ -32,6 +34,7 @@ const RenderEditor = (ElementId: string, page: any) => {
         editor = new EditorJS({
           holder: ElementId,
           autofocus: true,
+          //readOnly: true,
           tools: {
             header: {
               class: Header,
@@ -47,7 +50,11 @@ const RenderEditor = (ElementId: string, page: any) => {
           },
           data: dataInit,
           onReady: () => { },
-          onChange: () => { }
+          onChange: () => {
+            setTimeout(() => {
+              onSave(page);
+            }, 1000);
+          }
         });
       }
       fetchData();
@@ -69,35 +76,46 @@ export default function Editor({ page }: any) {
 
   RenderEditor(elementId, page);
 
-  function onSave() {
-    console.log(editor)
-    if (editor) {
-      editor.save().then((outputData: any) => {
-        console.log(page.page)
-        saveFile(outputData, page).then((data: any) => {
-          console.log("Data saved => ", data)
-        });
-      }).catch((error: any) => {
-        console.log('Saving failed: ', error)
-      });
-    }
-  }
 
   return (
     <>
-      <div className='bg-slate-50/30 pt-10'>
-        <div
-          id={elementId}
-        ></div>
-        <div className="me-4 pb-4 flex justify-end">
-          <Button
-            variant="outline"
-            onClick={onSave}
-          >
-            Save Document
-          </Button>
+      <ScrollArea className=" h-[calc(100vh-100px)] w-full p-4">
+        <div className='bg-slate-50/30 pt-10 ps-10'>
+          <div
+            id={elementId}
+          ></div>
+          <div className="me-4 pb-4 flex justify-end">
+            {/* <Button
+              variant="outline"
+              onClick={onSave}
+            >
+              Save Document
+            </Button> */}
+          </div>
         </div>
-      </div>
+      </ScrollArea>
     </>
   )
+}
+
+function onSave(page: object) {
+  console.log(editor)
+  if (editor) {
+    editor.save().then((outputData: any) => {
+      console.log(page.page)
+      saveFile(outputData, page).then((data: any) => {
+        setTimeout(() => {
+          toast("Arquivo Salvo.", {
+            description: "Arquivo Salvo no Servidor.",
+            action: {
+              label: "Fechar",
+              onClick: () => console.log("Fechar"),
+            },
+          });
+        }, 1000);
+      });
+    }).catch((error: any) => {
+      console.log('Saving failed: ', error)
+    });
+  }
 }
