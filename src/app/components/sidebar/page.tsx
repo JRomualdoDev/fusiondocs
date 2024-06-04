@@ -3,26 +3,28 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { createSubMenu } from "./createSubMenu";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { useTheme } from "next-themes"
+
+// Components Shadcn ui
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator"
+import { Button, buttonVariants } from "@/components/ui/button";
 import { toast } from "sonner";
 
 import { useEffect, useState } from "react";
 
 import { loadMenu } from "./loadMenu"
+import { handler } from "./createFolder";
 
 
 import {
     FolderClosed,
     FileText,
-    Check,
-    X,
     FolderPlus,
-    FilePlus,
-    Plus,
     SquarePlus,
+    Sun,
+    Moon
 
 } from "lucide-react";
 
@@ -32,7 +34,13 @@ import {
     AccordionItem,
     AccordionTrigger,
 } from "@/components/ui/accordion";
-import { handler } from "./createFolder";
+
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 
 // function Sidebar({ className, menus }: SidebarProps) {
@@ -45,6 +53,9 @@ function Sidebar() {
     const [refreshMenu, setRefreshMenu] = useState(false);
     const [iconHoverMenu, setIconHoverMenu] = useState(false);
     const [iconHoverSubMenu, setIconHoverSubMenu] = useState(false);
+
+    // Theme 
+    const { setTheme } = useTheme();
 
     function fileCreate(menuLabel: string) {
 
@@ -291,6 +302,28 @@ function Sidebar() {
                                         <X className="w-5 h-5" />
                                     </Button> */}
                                 </div>
+                            </div>
+                            <div className="absolute bottom-1 left-4">
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button variant="outline" size="icon">
+                                            <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                                            <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                                            <span className="sr-only">Toggle theme</span>
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="end">
+                                        <DropdownMenuItem onClick={() => setTheme("light")}>
+                                            Light
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => setTheme("dark")}>
+                                            Dark
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => setTheme("system")}>
+                                            System
+                                        </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
                             </div>
                         </div>
                     </ScrollArea>
