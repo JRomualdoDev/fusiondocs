@@ -18,6 +18,8 @@ import { useEffect, useState } from "react";
 
 import { loadMenu } from "./loadMenu"
 import { handler } from "./crud/createFolder";
+import { renameFolder } from "./crud/rename";
+import { delFolder } from "./crud/delete";
 
 
 import {
@@ -51,8 +53,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { renameFolder } from "./crud/rename";
-
+import { PopupDelete } from "./popup/delete";
 
 // function Sidebar({ className, menus }: SidebarProps) {
 function Sidebar() {
@@ -67,6 +68,7 @@ function Sidebar() {
     const [subItemMenu, setSubItemMenu] = useState("");
     const [inputContent, setInputContent] = useState("");
     const [menu, setMenu] = useState([]);
+    const [menuName, setMenuName] = useState('');
     const [refreshMenu, setRefreshMenu] = useState(false);
     const [iconHoverMenu, setIconHoverMenu] = useState(false);
     const [iconHoverSubMenu, setIconHoverSubMenu] = useState(false);
@@ -77,6 +79,8 @@ function Sidebar() {
         newNameFolder: '',
     });
 
+    // Popup
+    const [openDelPopup, setOpenDelPopup] = useState(false);
 
     // Theme 
     const { setTheme } = useTheme();
@@ -122,27 +126,42 @@ function Sidebar() {
             });
         }
 
+        // Limpa o input
+        setInputContent('');
+
         // Atualiza o menu
         setRefreshMenu(!refreshMenu);
     }
 
-    function fileDelete(menuLabel: string) {
+    function deleteFolder(event: React.MouseEvent<SVGSVGElement, MouseEvent>, index: string, menuLabel: string) {
+        event.preventDefault();
 
-        if (inputContent === '') {
-            emptyFields();
-            return;
-        }
+        console.log('deleteFolder');
 
-        let newSubItemMenu = '';
-        let tempItemMenu = '';
-
-        // Passar o nome do item para o menu
-        itemMenu === "" ? tempItemMenu = menuLabel : tempItemMenu = itemMenu;
-
-        if (subItemMenu !== '') newSubItemMenu = subItemMenu
-
+        // Nome do menu para exclusão
+        setMenuName(menuLabel);
+        // Open Popup
+        setOpenDelPopup(true);
     }
 
+    // Delete Folder
+    function handleDeleteFolder() {
+        //if (delPopupFolder) {
+        console.log('deletePopup');
+        setOpenDelPopup(false);
+        delFolder(menuName).then((data: string) => {
+            toast("Excluindo Pasta.", {
+                description: data,
+                action: {
+                    label: "Fechar",
+                    onClick: () => console.log("Fechar"),
+                },
+            });
+        });
+        // Atualiza o menu
+        setRefreshMenu(!refreshMenu);
+
+    }
     // Rename Folder
     function rename(event: React.MouseEvent<SVGSVGElement, MouseEvent>) {
         event.preventDefault();
@@ -285,10 +304,16 @@ function Sidebar() {
                                                                             {
                                                                                 iconHoverRenameMenu.index === i &&
                                                                                 (
-                                                                                    <FilePenLine
-                                                                                        className="w-4 h-4 ms-4 text-green-300 hover:text-green-600 absolute right-0"
-                                                                                        onClick={(e) => activeInputFolder(e, i, menu.label)}
-                                                                                    />
+                                                                                    <div className="inline-flex items-end justify-end absolute right-1 content-end">
+                                                                                        <FilePenLine
+                                                                                            className="w-4 h-4 ms-4 text-green-300 hover:text-green-600"
+                                                                                            onClick={(e) => activeInputFolder(e, i, menu.label)}
+                                                                                        />
+                                                                                        <X
+                                                                                            className="w-4 h-4 ms-1 text-red-300 hover:text-red-600"
+                                                                                            onClick={(e) => deleteFolder(e, i, menu.label)}
+                                                                                        />
+                                                                                    </div>
                                                                                 )
                                                                             }
                                                                         </div>
@@ -323,6 +348,7 @@ function Sidebar() {
                                                                     className="w-[40px]} h-6"
                                                                     onChange={handleSubItemMenu}
                                                                     placeholder="Add SubMenu"
+                                                                    value={inputContent}
                                                                 />
                                                                 {
                                                                     iconHoverSubMenu && (
@@ -371,6 +397,7 @@ function Sidebar() {
                                         className="w-[40px]} h-6"
                                         onChange={handleItemMenu}
                                         placeholder="Add Menu"
+                                        value={inputContent}
                                     />
                                     {
                                         iconHoverMenu &&
@@ -379,14 +406,6 @@ function Sidebar() {
                                             onClick={() => fileCreate('')}
                                         />
                                     }
-
-                                    {/* <Button
-                                        variant="outline"
-                                        className="w-[50px] justify-start font-normal bg-red-500 text-white hover:bg-red-600"
-                                        onClick={() => fileDelete('')}
-                                    >
-                                        <X className="w-5 h-5" />
-                                    </Button> */}
                                 </div>
                             </div>
                             <div className="absolute bottom-1 left-4">
@@ -414,8 +433,15 @@ function Sidebar() {
                         </div>
                     </ScrollArea>
                 </div>
+                {
+                    <PopupDelete
+                        open={openDelPopup}
+                        close={() => setOpenDelPopup(false)}
+                        popupDelFolder={handleDeleteFolder}
+                        menuName={menuName}
+                    />
+                }
             </div>
-            {/* </div> */}
         </div>
     )
 }
