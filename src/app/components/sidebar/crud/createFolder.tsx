@@ -3,7 +3,6 @@
 // pages/api/createFile.ts
 import fs from 'fs';
 import path from 'path';
-import { loadMenu } from './loadMenu';
 
 export async function handler(folderName: string) {
   let message: string = '';

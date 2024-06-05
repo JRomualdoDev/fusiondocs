@@ -2,7 +2,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import { loadMenu } from './loadMenu';
+import { loadMenu } from '../loadMenu';
 
 export async function createSubMenu(item: string, subItem: string = '', action: string) {
 

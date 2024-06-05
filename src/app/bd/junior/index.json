@@ -1,7 +1,6 @@
-
-      {
-        "label": "junior",
-        "link": "/junior",
-        "isParent": true,
-        "subMenu": []
-      }
+{
+  "label": "junior",
+  "link": "/junior",
+  "isParent": true,
+  "subMenu": []
+}

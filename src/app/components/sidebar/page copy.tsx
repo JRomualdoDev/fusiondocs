@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { createMenu } from "./createSubMenu";
+import { createMenu } from "./crud/createSubMenu";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -26,7 +26,7 @@ import {
     AccordionItem,
     AccordionTrigger,
 } from "@/components/ui/accordion";
-import { handler } from "./createFolder";
+import { handler } from "./crud/createFolder";
 
 
 // function Sidebar({ className, menus }: SidebarProps) {

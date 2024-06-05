@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { createSubMenu } from "./createSubMenu";
+import { createSubMenu } from "./crud/createSubMenu";
 import { useTheme } from "next-themes"
 
 // Components Shadcn ui
@@ -10,12 +10,14 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator"
 import { Button, buttonVariants } from "@/components/ui/button";
+import { Label } from "@/components/ui/label"
+
 import { toast } from "sonner";
 
 import { useEffect, useState } from "react";
 
 import { loadMenu } from "./loadMenu"
-import { handler } from "./createFolder";
+import { handler } from "./crud/createFolder";
 
 
 import {
@@ -24,7 +26,15 @@ import {
     FolderPlus,
     SquarePlus,
     Sun,
-    Moon
+    Moon,
+    Plus,
+    Check,
+    FileCog,
+    FolderPen,
+    Pen,
+    BookOpenCheck,
+    FilePenLine,
+    X
 
 } from "lucide-react";
 
@@ -41,10 +51,17 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { renameFolder } from "./crud/rename";
 
 
 // function Sidebar({ className, menus }: SidebarProps) {
 function Sidebar() {
+
+    // Rename Folder
+    interface FolderState {
+        oldNameFolder?: string;
+        newNameFolder?: string;
+    }
 
     const [itemMenu, setItemMenu] = useState("");
     const [subItemMenu, setSubItemMenu] = useState("");
@@ -53,6 +70,13 @@ function Sidebar() {
     const [refreshMenu, setRefreshMenu] = useState(false);
     const [iconHoverMenu, setIconHoverMenu] = useState(false);
     const [iconHoverSubMenu, setIconHoverSubMenu] = useState(false);
+    const [iconHoverRenameMenu, setIconHoverRenameMenu] = useState({ index: '' });
+    const [showInputFolder, setShowInputFolder] = useState({ index: '' });
+    const [newNameFolder, setNewNameFolder] = useState<FolderState>({
+        oldNameFolder: '',
+        newNameFolder: '',
+    });
+
 
     // Theme 
     const { setTheme } = useTheme();
@@ -117,7 +141,32 @@ function Sidebar() {
 
         if (subItemMenu !== '') newSubItemMenu = subItemMenu
 
-        //file(tempItemMenu , newSubItemMenu, 'delete').then(data => console.log(data));
+    }
+
+    // Rename Folder
+    function rename(event: React.MouseEvent<SVGSVGElement, MouseEvent>) {
+        event.preventDefault();
+
+        renameFolder(newNameFolder).then((data: string) => {
+            toast("Renomeando Pasta.", {
+                description: data,
+                action: {
+                    label: "Fechar",
+                    onClick: () => console.log("Fechar"),
+                },
+            });
+        });
+        setShowInputFolder({ index: 'none' });
+        // Atualiza o menu
+        setRefreshMenu(!refreshMenu);
+    }
+
+    // Input ativo no menu Folder
+    function activeInputFolder(event: React.MouseEvent<SVGSVGElement, MouseEvent>, index: string, menuConfig: string) {
+        event.preventDefault();
+        setShowInputFolder({ index: index });
+        console.log(menuConfig);
+        setNewNameFolder({ oldNameFolder: menuConfig });
     }
 
     function handleItemMenu(event: React.ChangeEvent<HTMLInputElement>) {
@@ -129,6 +178,13 @@ function Sidebar() {
     function handleSubItemMenu(event: React.ChangeEvent<HTMLInputElement>) {
         setSubItemMenu(event.target.value);
         setInputContent(event.target.value);
+    }
+
+    function handleRenameInputFolder(event: React.ChangeEvent<HTMLInputElement>) {
+        setNewNameFolder({
+            newNameFolder: event.target.value,
+            oldNameFolder: newNameFolder.oldNameFolder
+        });
     }
 
     function emptyFields() {
@@ -175,7 +231,12 @@ function Sidebar() {
                                                 type="single"
                                                 collapsible
                                             >
-                                                <AccordionItem value={`item-${i}`} className="border-b-0">
+                                                <AccordionItem
+                                                    value={`item-${i}`}
+                                                    className="border-b-0"
+                                                    onMouseEnter={() => setIconHoverRenameMenu({ index: i })}
+                                                    onMouseLeave={() => setIconHoverRenameMenu({ index: 'none' })}
+                                                >
                                                     <AccordionTrigger
                                                         className={buttonVariants({
                                                             //size: "sm",
@@ -187,7 +248,52 @@ function Sidebar() {
                                                         <span className="inline-flex gap-1 gap-x-2 items-center justify-center">
                                                             {/* {menu.icon} {menu.label} */}
                                                             <FolderClosed className="w-4 h-4" />
-                                                            {menu.label}
+                                                            {
+                                                                showInputFolder?.index === i
+                                                                    ? (
+                                                                        <div className="inline-flex items-center justify-center">
+                                                                            <Input
+                                                                                id={menu.label}
+                                                                                placeholder={menu.label}
+                                                                                className="w-20 h-6"
+                                                                                onClick={(e) => e.preventDefault()}
+                                                                                onChange={handleRenameInputFolder}
+                                                                            />
+                                                                            <Check
+                                                                                className="w-3 h-3 ms-1 hover:text-green-500"
+                                                                                onClick={(e) => rename(e)}
+                                                                            />
+                                                                            <X
+                                                                                className="w-3 h-3 ms-1 hover:text-red-500"
+                                                                                onClick={(e) => {
+                                                                                    e.preventDefault();
+                                                                                    setShowInputFolder({ index: 'none' });
+                                                                                }}
+                                                                            />
+                                                                        </div>
+                                                                    )
+                                                                    : (
+                                                                        <div
+                                                                            className="inline-flex items-between justify-between"
+                                                                        >
+                                                                            <Label
+                                                                                htmlFor="label"
+                                                                                className=""
+                                                                            >
+                                                                                {menu.label}
+                                                                            </Label>
+                                                                            {
+                                                                                iconHoverRenameMenu.index === i &&
+                                                                                (
+                                                                                    <FilePenLine
+                                                                                        className="w-4 h-4 ms-4 text-green-300 hover:text-green-600 absolute right-0"
+                                                                                        onClick={(e) => activeInputFolder(e, i, menu.label)}
+                                                                                    />
+                                                                                )
+                                                                            }
+                                                                        </div>
+                                                                    )
+                                                            }
                                                         </span>
                                                     </AccordionTrigger>
                                                     <AccordionContent
@@ -226,26 +332,6 @@ function Sidebar() {
                                                                         />
                                                                     )
                                                                 }
-
-
-                                                                {/* <Input
-                                                                            className="w-[40px]} h-8"
-                                                                            onChange={handleSubItemMenu}
-                                                                        />
-                                                                        <Button
-                                                                            variant="outline"
-                                                                            className="w-[50px] justify-start font-normal bg-green-500 text-white hover:bg-green-600"
-                                                                            onClick={() => fileCreate(menu.label)}
-                                                                        >
-                                                                            <Check className="w-8 h-8" />
-                                                                        </Button>
-                                                                        <Button
-                                                                            variant="outline"
-                                                                            className="w-[50px] justify-start font-normal bg-red-500 text-white hover:bg-red-600"
-                                                                            onClick={() => fileDelete(menu.label)}
-                                                                        >
-                                                                            <X className="w-5 h-5" />
-                                                                        </Button> */}
                                                             </div>
                                                         </div>
 

@@ -33,7 +33,7 @@ const AccordionTrigger = React.forwardRef<
       )}
       {...props}
     >
-      <div className="flex-1 text-left">
+      <div className="flex-1 text-left relative">
         {children}
       </div>
       <ChevronDownIcon className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200" />
