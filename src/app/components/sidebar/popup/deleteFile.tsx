@@ -1,13 +1,6 @@
 'use client'
 
 import { Button } from "@/components/ui/button"
-import {
-    ContextMenu,
-    ContextMenuContent,
-    ContextMenuItem,
-    ContextMenuTrigger,
-} from "@/components/ui/context-menu"
-
 
 import {
     Dialog,
@@ -19,14 +12,14 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 
-export function PopupDelete({ open, close, popupDelFolder, menuName }: any) {
+export function PopupDeleteFile({ open, close, popupDelFile, fileName }: any) {
     return (
         <>
             <Dialog open={open} onOpenChange={close}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Tem certeza que deseja excluir a pasta
-                            {<span className="font-bold uppercase text-red-600"> {menuName} </span>}
+                        <DialogTitle>Tem certeza que deseja excluir este arquivo
+                            {<span className="font-bold uppercase text-red-600"> {fileName} </span>}
                             ?</DialogTitle>
                         <DialogDescription>
                             Está ação não pode ser refeita. Você tem certeza que deseja apagar esta pasta
@@ -35,7 +28,7 @@ export function PopupDelete({ open, close, popupDelFolder, menuName }: any) {
                     </DialogHeader>
                     <DialogFooter>
                         <Button
-                            onClick={popupDelFolder}
+                            onClick={popupDelFile}
                         >Confirmar
                         </Button>
                         <Button

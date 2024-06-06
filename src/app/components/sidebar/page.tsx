@@ -18,8 +18,8 @@ import { useEffect, useState } from "react";
 
 import { loadMenu } from "./loadMenu"
 import { handler } from "./crud/createFolder";
-import { renameFolder } from "./crud/rename";
-import { delFolder } from "./crud/delete";
+import { renameFolder, renameFile } from "./crud/rename";
+import { delFolder, delFile } from "./crud/delete";
 
 
 import {
@@ -53,7 +53,9 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { PopupDelete } from "./popup/delete";
+
+import { PopupDeleteFolder } from "./popup/deleteFolder";
+import { PopupDeleteFile } from "./popup/deleteFile";
 
 // function Sidebar({ className, menus }: SidebarProps) {
 function Sidebar() {
@@ -64,23 +66,38 @@ function Sidebar() {
         newNameFolder?: string;
     }
 
+    // Rename File
+    interface FileState {
+        oldNameFile?: string;
+        newNameFile?: string;
+        folderName?: string;
+    }
+
     const [itemMenu, setItemMenu] = useState("");
     const [subItemMenu, setSubItemMenu] = useState("");
     const [inputContent, setInputContent] = useState("");
     const [menu, setMenu] = useState([]);
     const [menuName, setMenuName] = useState('');
+    const [menuSubName, setMenuSubName] = useState('');
     const [refreshMenu, setRefreshMenu] = useState(false);
     const [iconHoverMenu, setIconHoverMenu] = useState(false);
     const [iconHoverSubMenu, setIconHoverSubMenu] = useState(false);
     const [iconHoverRenameMenu, setIconHoverRenameMenu] = useState({ index: '' });
+    const [iconHoverRenameSubMenu, setIconHoverRenameSubMenu] = useState({ subIndex: '' });
     const [showInputFolder, setShowInputFolder] = useState({ index: '' });
+    const [showInputFile, setShowInputFile] = useState({ subIndex: '' });
     const [newNameFolder, setNewNameFolder] = useState<FolderState>({
         oldNameFolder: '',
         newNameFolder: '',
     });
+    const [newNameFile, setNewNameFile] = useState<FileState>({
+        oldNameFile: '',
+        newNameFile: '',
+    });
 
     // Popup
-    const [openDelPopup, setOpenDelPopup] = useState(false);
+    const [openDelFolderPopup, setOpenDelFolderPopup] = useState(false);
+    const [openDelFilePopup, setOpenDelFilePopup] = useState(false);
 
     // Theme 
     const { setTheme } = useTheme();
@@ -135,20 +152,29 @@ function Sidebar() {
 
     function deleteFolder(event: React.MouseEvent<SVGSVGElement, MouseEvent>, index: string, menuLabel: string) {
         event.preventDefault();
-
-        console.log('deleteFolder');
-
         // Nome do menu para exclusão
         setMenuName(menuLabel);
         // Open Popup
-        setOpenDelPopup(true);
+        setOpenDelFolderPopup(true);
+    }
+
+    function deleteFile(event: React.MouseEvent<SVGSVGElement, MouseEvent>, menuLabel: string, subMenuLabel: string) {
+        event.preventDefault();
+
+        console.log(subMenuLabel);
+
+        // Seta o nome do menu
+        setMenuName(menuLabel);
+        // Nome do menu para exclusão
+        setMenuSubName(subMenuLabel);
+        // Open Popup
+        setOpenDelFilePopup(true);
     }
 
     // Delete Folder
     function handleDeleteFolder() {
-        //if (delPopupFolder) {
         console.log('deletePopup');
-        setOpenDelPopup(false);
+        setOpenDelFolderPopup(false);
         delFolder(menuName).then((data: string) => {
             toast("Excluindo Pasta.", {
                 description: data,
@@ -162,8 +188,27 @@ function Sidebar() {
         setRefreshMenu(!refreshMenu);
 
     }
+
+    // Delete File
+    function handleDeleteFile() {
+        console.log('deletePopup');
+        setOpenDelFilePopup(false);
+        delFile(menuName, menuSubName).then((data: string) => {
+            toast("Excluindo Arquivo.", {
+                description: data,
+                action: {
+                    label: "Fechar",
+                    onClick: () => console.log("Fechar"),
+                },
+            });
+        });
+        // Atualiza o menu
+        setRefreshMenu(!refreshMenu);
+
+    }
+
     // Rename Folder
-    function rename(event: React.MouseEvent<SVGSVGElement, MouseEvent>) {
+    function folderRename(event: React.MouseEvent<SVGSVGElement, MouseEvent>) {
         event.preventDefault();
 
         renameFolder(newNameFolder).then((data: string) => {
@@ -180,12 +225,38 @@ function Sidebar() {
         setRefreshMenu(!refreshMenu);
     }
 
+    // Rename File
+    function fileRename(event: React.MouseEvent<SVGSVGElement, MouseEvent>, menuName: string) {
+        event.preventDefault();
+        renameFile(newNameFile, menuName).then((data: string) => {
+            toast("Renomeando File.", {
+                description: data,
+                action: {
+                    label: "Fechar",
+                    onClick: () => console.log("Fechar"),
+                },
+            });
+        });
+        setShowInputFile({ subIndex: 'none' });
+        // Atualiza o menu
+        setRefreshMenu(!refreshMenu);
+    }
+
     // Input ativo no menu Folder
     function activeInputFolder(event: React.MouseEvent<SVGSVGElement, MouseEvent>, index: string, menuConfig: string) {
         event.preventDefault();
         setShowInputFolder({ index: index });
         console.log(menuConfig);
         setNewNameFolder({ oldNameFolder: menuConfig });
+    }
+
+    // Input ativo no Sub menu File
+    function activeInputFile(event: React.MouseEvent<SVGSVGElement, MouseEvent>, index: string, menuConfig: string) {
+        event.preventDefault();
+        setShowInputFile({ subIndex: index });
+        console.log(menuConfig);
+        console.log(menuName);
+        setNewNameFile({ oldNameFile: menuConfig });
     }
 
     function handleItemMenu(event: React.ChangeEvent<HTMLInputElement>) {
@@ -203,6 +274,13 @@ function Sidebar() {
         setNewNameFolder({
             newNameFolder: event.target.value,
             oldNameFolder: newNameFolder.oldNameFolder
+        });
+    }
+
+    function handleRenameInputFile(event: React.ChangeEvent<HTMLInputElement>) {
+        setNewNameFile({
+            newNameFile: event.target.value,
+            oldNameFile: newNameFile.oldNameFile
         });
     }
 
@@ -280,7 +358,7 @@ function Sidebar() {
                                                                             />
                                                                             <Check
                                                                                 className="w-3 h-3 ms-1 hover:text-green-500"
-                                                                                onClick={(e) => rename(e)}
+                                                                                onClick={(e) => folderRename(e)}
                                                                             />
                                                                             <X
                                                                                 className="w-3 h-3 ms-1 hover:text-red-500"
@@ -322,25 +400,91 @@ function Sidebar() {
                                                         </span>
                                                     </AccordionTrigger>
                                                     <AccordionContent
-                                                        onMouseEnter={() => setIconHoverSubMenu(true)}
-                                                        onMouseLeave={() => setIconHoverSubMenu(false)}
+                                                        onMouseEnter={() => {
+                                                            setIconHoverSubMenu(true);
+                                                        }}
+                                                        onMouseLeave={() => {
+                                                            setIconHoverSubMenu(false);
+                                                        }}
                                                     >
-                                                        {menu.subMenu?.map((subItem: any, subIndex: any) => (
-                                                            <Link
-                                                                key={`${subIndex}-${i}`}
-                                                                href={subItem.link}>
-                                                                <Button
+                                                        {menu.subMenu?.map((subItem: any, subIndex: any) => {
+                                                            return (
+                                                                <div
                                                                     key={`${subIndex}-${i}`}
-                                                                    variant="ghost"
-                                                                    size="sm"
-                                                                    className="w-full justify-start font-normal gap-x-2 ps-6"
+                                                                    className="flex flex-col w-full relative"
+                                                                    onMouseEnter={() => {
+                                                                        setIconHoverRenameSubMenu({ subIndex: `${subItem}-${subIndex}-${i}` })
+                                                                    }}
+                                                                    onMouseLeave={() => {
+                                                                        setIconHoverRenameSubMenu({ subIndex: 'none' })
+                                                                    }}
                                                                 >
-                                                                    <FileText className="w-4 h-4" />
+                                                                    {
+                                                                        showInputFile?.subIndex === `${subItem}-${subIndex}-${i}`
+                                                                            ? (
+                                                                                <div className="inline-flex items-center justify-center">
+                                                                                    <Input
+                                                                                        id={subItem.label}
+                                                                                        placeholder={subItem.label}
+                                                                                        className="w-20 h-6"
+                                                                                        onClick={(e) => e.preventDefault()}
+                                                                                        onChange={handleRenameInputFile}
+                                                                                    />
+                                                                                    <Check
+                                                                                        className="w-3 h-3 ms-1 hover:text-green-500"
+                                                                                        onClick={(e) => fileRename(e, menu.label)}
+                                                                                    />
+                                                                                    <X
+                                                                                        className="w-3 h-3 ms-1 hover:text-red-500"
+                                                                                        onClick={(e) => {
+                                                                                            e.preventDefault();
+                                                                                            setShowInputFile({ subIndex: 'none' });
+                                                                                        }}
+                                                                                    />
+                                                                                </div>
+                                                                            )
+                                                                            : (
+                                                                                <div
+                                                                                    className="inline-flex items-between justify-between"
+                                                                                >
+                                                                                    <Link
+                                                                                        key={`${subIndex}-${i}`}
+                                                                                        href={subItem.link}
+                                                                                        className="w-full"
+                                                                                    >
 
-                                                                    {subItem.label}
-                                                                </Button>
-                                                            </Link>
-                                                        ))}
+                                                                                        <Button
+                                                                                            key={`${subIndex}-${i}`}
+                                                                                            variant="ghost"
+                                                                                            size="sm"
+                                                                                            className="w-full justify-start font-normal gap-x-2 ps-6"
+                                                                                        >
+                                                                                            <FileText className="w-4 h-4" />
+
+                                                                                            {subItem.label}
+                                                                                            {
+                                                                                                iconHoverRenameSubMenu.subIndex === `${subItem}-${subIndex}-${i}` &&
+                                                                                                (
+                                                                                                    <div className="inline-flex items-end justify-end absolute right-1 content-end">
+                                                                                                        <FilePenLine
+                                                                                                            className="w-4 h-4 ms-4 text-green-300 hover:text-green-600"
+                                                                                                            onClick={(e) => activeInputFile(e, `${subItem}-${subIndex}-${i}`, subItem.label)}
+                                                                                                        />
+                                                                                                        <X
+                                                                                                            className="w-4 h-4 ms-1 text-red-300 hover:text-red-600"
+                                                                                                            onClick={(e) => deleteFile(e, menu.label, subItem.label)}
+                                                                                                        />
+                                                                                                    </div>
+                                                                                                )
+                                                                                            }
+                                                                                        </Button>
+                                                                                    </Link>
+                                                                                </div>
+                                                                            )
+                                                                    }
+                                                                </div>
+                                                            )
+                                                        })}
                                                         <div className="flex flex-col items-center justify-center gap-2  bg-background p-2 mt-1">
                                                             {/* <h3 className="pe-4">Adicionar Sub Menu</h3> */}
                                                             <div className="inline-flex gap-1 px-2 items-center">
@@ -434,11 +578,19 @@ function Sidebar() {
                     </ScrollArea>
                 </div>
                 {
-                    <PopupDelete
-                        open={openDelPopup}
-                        close={() => setOpenDelPopup(false)}
+                    <PopupDeleteFolder
+                        open={openDelFolderPopup}
+                        close={() => setOpenDelFolderPopup(false)}
                         popupDelFolder={handleDeleteFolder}
                         menuName={menuName}
+                    />
+                }
+                {
+                    <PopupDeleteFile
+                        open={openDelFilePopup}
+                        close={() => setOpenDelFilePopup(false)}
+                        popupDelFile={handleDeleteFile}
+                        fileName={menuSubName}
                     />
                 }
             </div>

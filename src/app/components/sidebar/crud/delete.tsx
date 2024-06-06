@@ -22,3 +22,24 @@ export async function delFolder(folder: string) {
 
     return message;
 }
+
+export async function delFile(folder: string, file: string) {
+    console.log(folder);
+    console.log(file);
+
+    let message = '';
+
+    const filePath = path.join(process.cwd(), `src/app/bd/${folder}/${file}.json`);
+
+    // Exclui File
+    try {
+        fs.unlink(filePath, (err) => { })
+
+        message = 'Arquivo excluído com sucesso!';
+    } catch (error) {
+        console.log(error)
+        message = 'Erro ao excluir arquivo!';
+    }
+
+    return message;
+}
