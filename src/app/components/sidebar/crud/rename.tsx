@@ -22,7 +22,7 @@ export async function renameFolder(folderConfig: FolderState) {
         let parsedData = JSON.parse(data);
         // Modifica o label e o link
         parsedData.label = folderConfig.newNameFolder;
-        parsedData.link = `/${folderConfig.newNameFolder}`
+        parsedData.link = `/http/show/${folderConfig.newNameFolder}`
         // Escreve o arquivo index
         await fs.writeFile(indexFilePath, JSON.stringify(parsedData));
 

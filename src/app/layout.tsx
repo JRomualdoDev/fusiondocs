@@ -28,8 +28,6 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <div className="inline-flex w-full">
-
-            {/* <Sidebar menus={sideMenu}/> */}
             <Sidebar />
             <div className="flex flex-col w-full h-full items-center">
               {children}

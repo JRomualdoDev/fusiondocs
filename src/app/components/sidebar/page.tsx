@@ -29,12 +29,7 @@ import {
     SquarePlus,
     Sun,
     Moon,
-    Plus,
     Check,
-    FileCog,
-    FolderPen,
-    Pen,
-    BookOpenCheck,
     FilePenLine,
     X
 
@@ -75,7 +70,11 @@ function Sidebar() {
 
     const [itemMenu, setItemMenu] = useState("");
     const [subItemMenu, setSubItemMenu] = useState("");
-    const [inputContent, setInputContent] = useState("");
+    const [inputFolderContent, setInputFolderContent] = useState("");
+    const [inputFileContent, setInputFileContent] = useState({
+        subItem: "",
+        content: "",
+    });
     const [menu, setMenu] = useState([]);
     const [menuName, setMenuName] = useState('');
     const [menuSubName, setMenuSubName] = useState('');
@@ -102,9 +101,43 @@ function Sidebar() {
     // Theme 
     const { setTheme } = useTheme();
 
+    function folderCreate(menuLabel: string) {
+
+        // Campo Folder Vazio
+        if (inputFolderContent === '') {
+            emptyFields();
+            return;
+        }
+
+        // let tempItemMenu = '';
+
+        // Passar o nome do item para o menu
+        // itemMenu === '' ? tempItemMenu = menuLabel : tempItemMenu = itemMenu;
+        // let tempItemMenu = itemMenu;
+
+        // Cria o menu primeira vez
+        // Cria a pasta e o arquivo
+        handler(itemMenu).then((data) => {
+            toast("Criação Pasta.", {
+                description: data,
+                action: {
+                    label: "Fechar",
+                    onClick: () => console.log("Fechar"),
+                },
+            });
+        });
+
+        // Limpa o input
+        setInputFolderContent('');
+
+        // Atualiza o menu
+        setRefreshMenu(!refreshMenu);
+    }
+
     function fileCreate(menuLabel: string) {
 
-        if (inputContent === '') {
+        // Campo Folder Vazio
+        if (inputFileContent.content === '') {
             emptyFields();
             return;
         }
@@ -117,34 +150,19 @@ function Sidebar() {
 
         if (subItemMenu !== '') tempItemSubMenu = subItemMenu;
 
-        // Cria o menu primeira vez
-        if (tempItemSubMenu === '') {
-            // Cria a pasta e o arquivo
-            handler(`${tempItemMenu}`).then((data) => {
-                toast("Criação Pasta.", {
-                    description: data,
-                    action: {
-                        label: "Fechar",
-                        onClick: () => console.log("Fechar"),
-                    },
-                });
+        // Cria subMenu
+        createSubMenu(tempItemMenu, tempItemSubMenu, 'create').then((data) => {
+            toast("Criação SubPasta.", {
+                description: data,
+                action: {
+                    label: "Fechar",
+                    onClick: () => console.log("Fechar"),
+                },
             });
-        }
-        else {
-            // Cria subMenu
-            createSubMenu(tempItemMenu, tempItemSubMenu, 'create').then((data) => {
-                toast("Criação SubPasta.", {
-                    description: data,
-                    action: {
-                        label: "Fechar",
-                        onClick: () => console.log("Fechar"),
-                    },
-                });
-            });
-        }
+        });
 
         // Limpa o input
-        setInputContent('');
+        setInputFileContent({ subItem: '', content: '' });
 
         // Atualiza o menu
         setRefreshMenu(!refreshMenu);
@@ -160,9 +178,6 @@ function Sidebar() {
 
     function deleteFile(event: React.MouseEvent<SVGSVGElement, MouseEvent>, menuLabel: string, subMenuLabel: string) {
         event.preventDefault();
-
-        console.log(subMenuLabel);
-
         // Seta o nome do menu
         setMenuName(menuLabel);
         // Nome do menu para exclusão
@@ -250,24 +265,22 @@ function Sidebar() {
         setNewNameFolder({ oldNameFolder: menuConfig });
     }
 
-    // Input ativo no Sub menu File
+    // Input ativo no Submenu File
     function activeInputFile(event: React.MouseEvent<SVGSVGElement, MouseEvent>, index: string, menuConfig: string) {
         event.preventDefault();
         setShowInputFile({ subIndex: index });
-        console.log(menuConfig);
-        console.log(menuName);
         setNewNameFile({ oldNameFile: menuConfig });
     }
 
     function handleItemMenu(event: React.ChangeEvent<HTMLInputElement>) {
         setItemMenu(event.target.value);
-        setInputContent(event.target.value);
+        setInputFolderContent(event.target.value);
         setSubItemMenu('');
     }
 
-    function handleSubItemMenu(event: React.ChangeEvent<HTMLInputElement>) {
+    function handleSubItemMenu(event: React.ChangeEvent<HTMLInputElement>, indexSubMenu: string) {
         setSubItemMenu(event.target.value);
-        setInputContent(event.target.value);
+        setInputFileContent({ subItem: indexSubMenu, content: event.target.value });
     }
 
     function handleRenameInputFolder(event: React.ChangeEvent<HTMLInputElement>) {
@@ -304,12 +317,12 @@ function Sidebar() {
     const pathname = usePathname()
 
     return (
-        <div className="flex flex-col space-y-2 w-[260px] border bg-background">
+        <div className="flex flex-col space-y-2 w-[260px] border bg-background ">
             {/* <div className={cn("pb-12", className)}> */}
             <div className="space-y-4 pb-2">
                 <div className="py-2">
-                    <ScrollArea className="min-h-[300px] max-h-screen px-2">
-                        <div className="space-y-1 p-2 h-[calc(100vh-28px)]">
+                    <ScrollArea className="min-h-[300px] max-h-screen px-2 relative">
+                        <div className="space-y-1 p-2 h-[calc(100vh-82px)] flex flex-col">
                             <div className="mb-8">
                                 <img src="/logo.png" className="w-[300px] h-12 border bg-background" alt="logo" />
                             </div>
@@ -373,12 +386,16 @@ function Sidebar() {
                                                                         <div
                                                                             className="inline-flex items-between justify-between"
                                                                         >
-                                                                            <Label
-                                                                                htmlFor="label"
-                                                                                className=""
+                                                                            <Link
+                                                                                href={menu.link}
                                                                             >
-                                                                                {menu.label}
-                                                                            </Label>
+                                                                                <Label
+                                                                                    htmlFor="label"
+                                                                                    className=""
+                                                                                >
+                                                                                    {menu.label}
+                                                                                </Label>
+                                                                            </Link>
                                                                             {
                                                                                 iconHoverRenameMenu.index === i &&
                                                                                 (
@@ -424,7 +441,7 @@ function Sidebar() {
                                                                             ? (
                                                                                 <div className="inline-flex items-center justify-center">
                                                                                     <Input
-                                                                                        id={subItem.label}
+                                                                                        id={`${subItem}-${subIndex}-${i}`}
                                                                                         placeholder={subItem.label}
                                                                                         className="w-20 h-6"
                                                                                         onClick={(e) => e.preventDefault()}
@@ -483,16 +500,17 @@ function Sidebar() {
                                                                             )
                                                                     }
                                                                 </div>
-                                                            )
+                                                            );
                                                         })}
                                                         <div className="flex flex-col items-center justify-center gap-2  bg-background p-2 mt-1">
                                                             {/* <h3 className="pe-4">Adicionar Sub Menu</h3> */}
                                                             <div className="inline-flex gap-1 px-2 items-center">
                                                                 <Input
+                                                                    id={`${menu.label}-${i}`}
                                                                     className="w-[40px]} h-6"
-                                                                    onChange={handleSubItemMenu}
+                                                                    onChange={(e) => handleSubItemMenu(e, i)}
                                                                     placeholder="Add SubMenu"
-                                                                    value={inputContent}
+                                                                    value={inputFileContent.subItem === i ? inputFileContent.content : ''}
                                                                 />
                                                                 {
                                                                     iconHoverSubMenu && (
@@ -541,41 +559,43 @@ function Sidebar() {
                                         className="w-[40px]} h-6"
                                         onChange={handleItemMenu}
                                         placeholder="Add Menu"
-                                        value={inputContent}
+                                        value={inputFolderContent}
                                     />
                                     {
                                         iconHoverMenu &&
                                         <FolderPlus
                                             className="w-6 h-6 text-green-700 hover:text-green-400 ms-2 hover:cursor-pointer"
-                                            onClick={() => fileCreate('')}
+                                            onClick={() => folderCreate('')}
                                         />
                                     }
                                 </div>
-                            </div>
-                            <div className="absolute bottom-1 left-4">
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <Button variant="outline" size="icon">
-                                            <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                                            <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-                                            <span className="sr-only">Toggle theme</span>
-                                        </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="end">
-                                        <DropdownMenuItem onClick={() => setTheme("light")}>
-                                            Light
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem onClick={() => setTheme("dark")}>
-                                            Dark
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem onClick={() => setTheme("system")}>
-                                            System
-                                        </DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
+
                             </div>
                         </div>
+                        {/* <div className="absolute bottom-1 left-4"> */}
                     </ScrollArea>
+                    <div className="ms-4 mt-5">
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="outline" size="icon">
+                                    <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                                    <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                                    <span className="sr-only">Toggle theme</span>
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                                <DropdownMenuItem onClick={() => setTheme("light")}>
+                                    Light
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => setTheme("dark")}>
+                                    Dark
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => setTheme("system")}>
+                                    System
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
                 </div>
                 {
                     <PopupDeleteFolder

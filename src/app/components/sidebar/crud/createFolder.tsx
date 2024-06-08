@@ -3,6 +3,7 @@
 // pages/api/createFile.ts
 import fs from 'fs';
 import path from 'path';
+import { redirect } from 'next/navigation'
 
 export async function handler(folderName: string) {
   let message: string = '';
@@ -32,7 +33,7 @@ export async function handler(folderName: string) {
     const fileContent = `
       {
         "label": "${folderName}",
-        "link": "/${folderName}",
+        "link": "/http/show/${folderName}",
         "isParent": true,
         "subMenu": []
       }`;
@@ -46,6 +47,14 @@ export async function handler(folderName: string) {
   } catch (error: any) {
     message = error.message;
   }
+
+  // https://stackoverflow.com/questions/76191324/next-13-4-error-next-redirect-in-api-routes
+  // Ocorre um erro ao usar o redirect dentro o try catch
+  if (message === 'Pasta criada com sucesso.') {
+    // Redirect para url criada
+    redirect(`/http/show/${folderName}`);
+  }
+
   return message;
 }
 

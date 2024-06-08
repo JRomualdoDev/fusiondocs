@@ -3,6 +3,7 @@
 import { promises as fs } from 'fs';
 import path from 'path';
 import { loadMenu } from '../loadMenu';
+import { redirect } from 'next/navigation';
 
 export async function createSubMenu(item: string, subItem: string = '', action: string) {
 
@@ -52,6 +53,12 @@ export async function createSubMenu(item: string, subItem: string = '', action: 
         } catch (error) {
             console.log("Error => ", error)
         }
+    }
+    // https://stackoverflow.com/questions/76191324/next-13-4-error-next-redirect-in-api-routes
+    // Ocorre um erro ao usar o redirect dentro o try catch
+    if (message === 'SubMenu Criado com sucesso.') {
+        // Redirect para url criada
+        redirect(`/http/show/${item}/${subItem}`);
     }
     return message;
 }
