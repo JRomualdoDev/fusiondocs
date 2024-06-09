@@ -1,7 +1,6 @@
-
-      {
-        "label": "aaa",
-        "link": "/aaa",
-        "isParent": true,
-        "subMenu": []
-      }
+{
+  "label": "aaa",
+  "link": "/http/show/aaa",
+  "isParent": true,
+  "subMenu": []
+}

@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link";
+import Image from 'next/image'
 import { usePathname } from "next/navigation";
 import { createSubMenu } from "./crud/createSubMenu";
 import { useTheme } from "next-themes"
@@ -21,6 +22,12 @@ import { handler } from "./crud/createFolder";
 import { renameFolder, renameFile } from "./crud/rename";
 import { delFolder, delFile } from "./crud/delete";
 
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 import {
     FolderClosed,
@@ -109,12 +116,6 @@ function Sidebar() {
             return;
         }
 
-        // let tempItemMenu = '';
-
-        // Passar o nome do item para o menu
-        // itemMenu === '' ? tempItemMenu = menuLabel : tempItemMenu = itemMenu;
-        // let tempItemMenu = itemMenu;
-
         // Cria o menu primeira vez
         // Cria a pasta e o arquivo
         handler(itemMenu).then((data) => {
@@ -151,7 +152,7 @@ function Sidebar() {
         if (subItemMenu !== '') tempItemSubMenu = subItemMenu;
 
         // Cria subMenu
-        createSubMenu(tempItemMenu, tempItemSubMenu, 'create').then((data) => {
+        createSubMenu(tempItemMenu, tempItemSubMenu).then((data) => {
             toast("Criação SubPasta.", {
                 description: data,
                 action: {
@@ -322,9 +323,14 @@ function Sidebar() {
             <div className="space-y-4 pb-2">
                 <div className="py-2">
                     <ScrollArea className="min-h-[300px] max-h-screen px-2 relative">
-                        <div className="space-y-1 p-2 h-[calc(100vh-82px)] flex flex-col">
-                            <div className="mb-8">
-                                <img src="/logo.png" className="w-[300px] h-12 border bg-background" alt="logo" />
+                        <div className="space-y-1 p-2 h-[calc(100vh-122px)] flex flex-col">
+                            <div className="mb-4 ">
+                                <Image
+                                    src="/logo.png"
+                                    width={500}
+                                    height={500}
+                                    alt="Picture of the author"
+                                />
                             </div>
                             {
                                 menu.map((menu: any, i: any) => {
@@ -347,75 +353,88 @@ function Sidebar() {
                                                     onMouseEnter={() => setIconHoverRenameMenu({ index: i })}
                                                     onMouseLeave={() => setIconHoverRenameMenu({ index: 'none' })}
                                                 >
-                                                    <AccordionTrigger
-                                                        className={buttonVariants({
-                                                            //size: "sm",
-                                                            variant: pathname === menu.link ? "default" : "ghost",
-                                                            //align: "flexBetween",
-                                                            className: "hover:no-underline items-center justify-start",
-                                                        })}
+                                                    <Link
+                                                        href={menu.link}
                                                     >
-                                                        <span className="inline-flex gap-1 gap-x-2 items-center justify-center">
-                                                            {/* {menu.icon} {menu.label} */}
-                                                            <FolderClosed className="w-4 h-4" />
-                                                            {
-                                                                showInputFolder?.index === i
-                                                                    ? (
-                                                                        <div className="inline-flex items-center justify-center">
-                                                                            <Input
-                                                                                id={menu.label}
-                                                                                placeholder={menu.label}
-                                                                                className="w-20 h-6"
-                                                                                onClick={(e) => e.preventDefault()}
-                                                                                onChange={handleRenameInputFolder}
-                                                                            />
-                                                                            <Check
-                                                                                className="w-3 h-3 ms-1 hover:text-green-500"
-                                                                                onClick={(e) => folderRename(e)}
-                                                                            />
-                                                                            <X
-                                                                                className="w-3 h-3 ms-1 hover:text-red-500"
-                                                                                onClick={(e) => {
-                                                                                    e.preventDefault();
-                                                                                    setShowInputFolder({ index: 'none' });
-                                                                                }}
-                                                                            />
-                                                                        </div>
-                                                                    )
-                                                                    : (
-                                                                        <div
-                                                                            className="inline-flex items-between justify-between"
-                                                                        >
-                                                                            <Link
-                                                                                href={menu.link}
+                                                        <AccordionTrigger
+                                                            className={buttonVariants({
+                                                                //size: "sm",
+                                                                variant: pathname === menu.link ? "default" : "ghost",
+                                                                //align: "flexBetween",
+                                                                className: "hover:no-underline items-center justify-start",
+                                                            })}
+                                                        >
+
+                                                            <span className="inline-flex gap-1 gap-x-2 items-center justify-center">
+                                                                {/* {menu.icon} {menu.label} */}
+                                                                <FolderClosed className="w-4 h-4" />
+                                                                {
+                                                                    showInputFolder?.index === i
+                                                                        ? (
+                                                                            <div className="inline-flex items-center justify-center">
+                                                                                <Input
+                                                                                    id={menu.label}
+                                                                                    placeholder={menu.label}
+                                                                                    className="w-20 h-6"
+                                                                                    onClick={(e) => e.preventDefault()}
+                                                                                    onChange={handleRenameInputFolder}
+                                                                                />
+                                                                                <Check
+                                                                                    className="w-3 h-3 ms-1 hover:text-green-500"
+                                                                                    onClick={(e) => folderRename(e)}
+                                                                                />
+                                                                                <X
+                                                                                    className="w-3 h-3 ms-1 hover:text-red-500"
+                                                                                    onClick={(e) => {
+                                                                                        e.preventDefault();
+                                                                                        setShowInputFolder({ index: 'none' });
+                                                                                    }}
+                                                                                />
+                                                                            </div>
+                                                                        )
+                                                                        : (
+
+                                                                            <div
+                                                                                className="inline-flex items-between justify-between"
                                                                             >
-                                                                                <Label
-                                                                                    htmlFor="label"
-                                                                                    className=""
-                                                                                >
-                                                                                    {menu.label}
-                                                                                </Label>
-                                                                            </Link>
-                                                                            {
-                                                                                iconHoverRenameMenu.index === i &&
-                                                                                (
-                                                                                    <div className="inline-flex items-end justify-end absolute right-1 content-end">
-                                                                                        <FilePenLine
-                                                                                            className="w-4 h-4 ms-4 text-green-300 hover:text-green-600"
-                                                                                            onClick={(e) => activeInputFolder(e, i, menu.label)}
-                                                                                        />
-                                                                                        <X
-                                                                                            className="w-4 h-4 ms-1 text-red-300 hover:text-red-600"
-                                                                                            onClick={(e) => deleteFolder(e, i, menu.label)}
-                                                                                        />
-                                                                                    </div>
-                                                                                )
-                                                                            }
-                                                                        </div>
-                                                                    )
-                                                            }
-                                                        </span>
-                                                    </AccordionTrigger>
+                                                                                <TooltipProvider>
+                                                                                    <Tooltip>
+                                                                                        <TooltipTrigger
+                                                                                            className="truncate w-[80px]"
+                                                                                        >{menu.label}
+                                                                                        </TooltipTrigger>
+                                                                                        <TooltipContent>
+                                                                                            <Label
+                                                                                                htmlFor="label"
+
+                                                                                            >
+                                                                                                {menu.label}
+                                                                                            </Label>
+                                                                                        </TooltipContent>
+                                                                                    </Tooltip>
+                                                                                </TooltipProvider>
+                                                                                {
+                                                                                    iconHoverRenameMenu.index === i &&
+                                                                                    (
+                                                                                        <div className="inline-flex items-end justify-end absolute right-1 content-end">
+                                                                                            <FilePenLine
+                                                                                                className="w-4 h-4 ms-4 text-green-300 hover:text-green-600"
+                                                                                                onClick={(e) => activeInputFolder(e, i, menu.label)}
+                                                                                            />
+                                                                                            <X
+                                                                                                className="w-4 h-4 ms-1 text-red-300 hover:text-red-600"
+                                                                                                onClick={(e) => deleteFolder(e, i, menu.label)}
+                                                                                            />
+                                                                                        </div>
+                                                                                    )
+                                                                                }
+                                                                            </div>
+
+                                                                        )
+                                                                }
+                                                            </span>
+                                                        </AccordionTrigger>
+                                                    </Link>
                                                     <AccordionContent
                                                         onMouseEnter={() => {
                                                             setIconHoverSubMenu(true);

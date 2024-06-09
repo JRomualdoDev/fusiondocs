@@ -7,13 +7,25 @@ import EditorJS from '@editorjs/editorjs';
 // @ts-ignore
 import Header from '@editorjs/header';
 import LinkTool from '@editorjs/link';
-import { Button } from '@/components/ui/button';
+import Embed from '@editorjs/embed';
+import Table from '@editorjs/table';
+import List from "@editorjs/list";
+import Warning from '@editorjs/warning';
+import CodeTool from '@editorjs/code';
+import SimpleImage from "@editorjs/simple-image";
+import RawTool from '@editorjs/raw';
+import Quote from '@editorjs/quote';
+import Marker from '@editorjs/marker';
+import Checklist from '@editorjs/checklist';
+import Delimiter from '@editorjs/delimiter';
+import InlineCode from '@editorjs/inline-code';
+
+
 import { saveFile } from './saveFile';
 
 import { initData } from './initData';
-import { toast } from 'sonner';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Circle } from 'lucide-react';
+import { Circle, CircleCheck, NotebookPenIcon, Save } from 'lucide-react';
 
 import { AlertDialogDemo } from './popup/save';
 
@@ -51,10 +63,59 @@ const RenderEditor = (ElementId: string, page: any) => {
             linkTool: {
               class: LinkTool,
               config: {
-                endpoint: 'http://localhost:3000/',
+                endpoint: 'http://localhost:3000/api/teste',
                 queryParam: 'search'
               }
-            }
+            },
+            table: {
+              class: Table,
+              inlineToolbar: true,
+              config: {
+                rows: 2,
+                cols: 3,
+              },
+            },
+            list: {
+              class: List,
+              inlineToolbar: true,
+              config: {
+                defaultStyle: 'unordered'
+              }
+            },
+            warning: {
+              class: Warning,
+              inlineToolbar: true,
+              shortcut: 'CMD+SHIFT+W',
+              config: {
+                titlePlaceholder: 'Title',
+                messagePlaceholder: 'Message',
+              },
+            },
+            quote: {
+              class: Quote,
+              inlineToolbar: true,
+              shortcut: 'CMD+SHIFT+O',
+              config: {
+                quotePlaceholder: 'Enter a quote',
+                captionPlaceholder: 'Quote\'s author',
+              },
+            },
+            Marker: {
+              class: Marker,
+              shortcut: 'CMD+SHIFT+M',
+            },
+            checklist: {
+              class: Checklist,
+              inlineToolbar: true,
+            },
+            inlineCode: {
+              class: InlineCode,
+              shortcut: 'CMD+SHIFT+M',
+            },
+            code: CodeTool,
+            image: SimpleImage,
+            raw: RawTool,
+            delimiter: Delimiter,
           },
           data: dataInit,
           onReady: async () => {
@@ -111,15 +172,22 @@ export default function Editor({ page }: any) {
 
   return (
     <>
-      {<div className="w-full flex justify-end pe-4  ">
-        <Circle
-          size={12}
-          color={editorData[1] as string ?? 'gray'}
-        />
-      </div>}
+      {
+        <div className="w-full flex justify-end pe-4  ">
+          {
+            editorData[1] == "green" &&
+            <text className="text-xs font-semibold text-green-500 pe-2">Salvando</text>
+          }
+
+          <NotebookPenIcon
+            size={18}
+            color={editorData[1] as string ?? 'gray'}
+          />
+        </div>
+      }
 
       <ScrollArea className=" h-[calc(100vh-100px)] w-full p-4">
-        <div className='bg-slate-50/30 pt-10 ps-10'>
+        <div className='pt-10 ps-10'>
           <div
             id={elementId}
           ></div>

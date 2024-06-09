@@ -5,14 +5,18 @@ import path from 'path';
 import { loadMenu } from '../loadMenu';
 import { redirect } from 'next/navigation';
 
-export async function createSubMenu(item: string, subItem: string = '', action: string) {
-
-    console.log(item)
-    console.log(subItem)
+export async function createSubMenu(item: string, subItem: string = '') {
 
     let message = '';
     let content = '';
     let parsedData: string[] = [];
+
+    // Limpa a string do nome da pasta para sempre minuscula e sem acentos
+    item = item.normalize("NFD").replace(/[^a-zA-Z\s]/g, "");
+    subItem = subItem.normalize("NFD").replace(/[^a-zA-Z\s]/g, "");
+    // Sem espaços
+    item = item.replace(/\s+/g, '');
+    subItem = subItem.replace(/\s+/g, '');
 
     // Defina o caminho para a nova pasta e arquivo
     const folderPath = path.join(process.cwd(), `src/app/bd/${item}`);

@@ -7,6 +7,12 @@ import { redirect } from 'next/navigation'
 
 export async function handler(folderName: string) {
   let message: string = '';
+
+  // Limpa a string do nome da pasta para sempre minuscula e sem acentos
+  folderName = folderName.normalize("NFD").replace(/[^a-zA-Z\s]/g, "");
+  // Sem espaços
+  folderName = folderName.replace(/\s+/g, '');
+
   try {
     // Verifica se os nomes da pasta e do arquivo são válidos
     if (!folderName) {
@@ -17,13 +23,9 @@ export async function handler(folderName: string) {
     const folderPath = path.join(process.cwd(), 'src/app/bd', folderName);
     const filePath = path.join(folderPath, `index.json`);
 
-    console.log('Caminho da pasta:', folderPath);
-    console.log('Caminho do arquivo:', filePath);
-
     // Cria a pasta se não existir
     if (!fs.existsSync(folderPath)) {
       fs.mkdirSync(folderPath, { recursive: true });
-      console.log('Pasta criada:', folderPath);
     }
     else {
       throw new Error('Pasta já existe.');

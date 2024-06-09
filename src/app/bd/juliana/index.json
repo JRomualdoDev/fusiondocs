@@ -1,1 +1,6 @@
-{"label":"juliana","link":"/juliana","isParent":true,"subMenu":[]}
+{
+    "label": "juliana",
+    "link": "/http/show/juliana",
+    "isParent": true,
+    "subMenu": []
+}
