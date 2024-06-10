@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-import EditorJS from '@editorjs/editorjs';
+import EditorJS, { ToolConstructable } from '@editorjs/editorjs';
 
 // @ts-ignore
 import Header from '@editorjs/header';
@@ -19,6 +19,11 @@ import Marker from '@editorjs/marker';
 import Checklist from '@editorjs/checklist';
 import Delimiter from '@editorjs/delimiter';
 import InlineCode from '@editorjs/inline-code';
+const AlignmentTuneTool = require('editorjs-text-alignment-blocktune');
+import Paragraph from '@editorjs/paragraph';
+import AIText from '@alkhipce/editorjs-aitext';
+
+import { useCompletion } from 'ai/react';
 
 
 import { saveFile } from './saveFile';
@@ -28,6 +33,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Circle, CircleCheck, NotebookPenIcon, Save } from 'lucide-react';
 
 import { AlertDialogDemo } from './popup/save';
+import { Label } from '@/components/ui/label';
 
 // Editor variável
 var editor: any;
@@ -35,6 +41,12 @@ let dataInit: any;
 
 // Esta função irá garantir que o componente seja renderizado uma única vez
 const RenderEditor = (ElementId: string, page: any) => {
+
+  const { completion, input, setInput, handleInputChange, handleSubmit } = useCompletion({
+    api: '/api/chat',
+  });
+
+
 
   const [editorJS, setEditorJS] = useState(null);
   const [color, setColor] = useState('gray');
@@ -53,12 +65,17 @@ const RenderEditor = (ElementId: string, page: any) => {
         // Aqui chamamos a execução do EditorJS e também podemos passar os parâmetros necessários para execução
         editor = new EditorJS({
           holder: ElementId,
-          // autofocus: true,
+          autofocus: true,
           //readOnly: true,
           tools: {
             header: {
               class: Header,
               shortcut: 'CMD+SHIFT+H',
+              tunes: ['tune'],
+            },
+            paragraph: {
+              class: Paragraph,
+              inlineToolbar: true,
             },
             linkTool: {
               class: LinkTool,
@@ -111,6 +128,38 @@ const RenderEditor = (ElementId: string, page: any) => {
             inlineCode: {
               class: InlineCode,
               shortcut: 'CMD+SHIFT+M',
+            },
+            tune: {
+              class: AlignmentTuneTool,
+              config: {
+                default: "right",
+                blocks: {
+                  header: 'center',
+                  list: 'right'
+                }
+              },
+            },
+            aiText: {
+              // if you do not use TypeScript you need to remove "as unknown as ToolConstructable" construction
+              // type ToolConstructable imported from @editorjs/editorjs package
+              class: AIText as unknown as ToolConstructable,
+              config: {
+                // here you need to provide your own suggestion provider (e.g., request to your backend)
+                // this callback function must accept a string and return a Promise<string>
+                callback: (text: any) => {
+                  return new Promise(resolve => {
+                    console.log(text)
+                    setInput(text);
+                    // handleSubmit(text)
+                    console.log(text)
+                    console.log(completion)
+                    setTimeout(() => {
+                      resolve(' ' + completion)
+                      console.log(completion)
+                    }, 1000)
+                  })
+                },
+              }
             },
             code: CodeTool,
             image: SimpleImage,
@@ -173,10 +222,10 @@ export default function Editor({ page }: any) {
   return (
     <>
       {
-        <div className="w-full flex justify-end pe-4  ">
+        <div className="w-full flex justify-end pe-4">
           {
             editorData[1] == "green" &&
-            <text className="text-xs font-semibold text-green-500 pe-2">Salvando</text>
+            <Label className="text-xs font-semibold text-green-500 pe-2">Salvando</Label>
           }
 
           <NotebookPenIcon

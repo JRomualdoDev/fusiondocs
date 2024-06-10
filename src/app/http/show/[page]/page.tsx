@@ -3,7 +3,7 @@
 import { loadMenu } from "@/app/components/sidebar/loadMenu";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
 import { useEffect, useState } from "react";
-import Router from 'next/router'
+import { useRouter } from 'next/navigation';
 
 import {
     Alert,
@@ -13,14 +13,11 @@ import {
 
 import {
     Card,
-    CardContent,
     CardDescription,
-    CardFooter,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
 import { Link, Terminal } from "lucide-react";
-import { redirect } from "next/dist/server/api-utils";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 
 
@@ -28,16 +25,15 @@ export default function Page({ params }: any) {
 
     const [menu, setMenu] = useState<string[]>([]);
 
+    const router = useRouter();
+
     let pages = params;
 
     useEffect(() => {
         loadMenu().then((menu: string[]) => {
             setMenu(menu);
         });
-
     }, []);
-
-    console.log(menu)
 
     return (
         <>
@@ -55,7 +51,6 @@ export default function Page({ params }: any) {
                 <div className="w-full p-3">
                     {
                         menu.map((menu: any, i: any) => {
-
                             if (pages.page == menu.label) {
                                 return (
                                     <div key={i}>
@@ -71,16 +66,19 @@ export default function Page({ params }: any) {
                                                 return (
                                                     <div
                                                         key={i}
-                                                        className="inline-flex m-3"
+                                                        className="inline-flex m-2 "
+                                                        onClick={() => router.push(submenu.link)}
                                                     >
                                                         <Card
-                                                            className="w-[250px] cursor-pointer"
-                                                            onClick={function () {
-                                                                if (!(typeof window === undefined)) {
-                                                                    window.history.pushState(null, 'null', submenu.link);
-                                                                    window.location.reload();
-                                                                }
-                                                            }}
+                                                            className="w-[250px] cursor-pointer hover:bg-slate-300/20"
+
+                                                        // onClick={function () {
+                                                        //     if (!(typeof window === undefined)) {
+                                                        //         window.history.pushState(null, 'null', submenu.link);
+                                                        //         window.location.reload();
+                                                        //     }
+                                                        // }}
+                                                        // href={submenu.link}
                                                         >
                                                             <CardHeader>
                                                                 <CardTitle>{submenu.label}</CardTitle>

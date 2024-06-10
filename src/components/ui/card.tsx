@@ -1,6 +1,7 @@
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
+import { redirect } from 'next/navigation'
 
 const Card = React.forwardRef<
   HTMLDivElement,
@@ -16,6 +17,7 @@ const Card = React.forwardRef<
   />
 ))
 Card.displayName = "Card"
+
 
 const CardHeader = React.forwardRef<
   HTMLDivElement,

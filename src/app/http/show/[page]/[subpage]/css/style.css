@@ -21,3 +21,19 @@
   h6.ce-header {
     @apply text-base font-semibold
   }
+
+  .link-tool__title, .link-tool__description {
+    color: black;
+  }
+
+  .tc-toolbox {
+    color: black !important;
+  }
+
+  .tc-cell--selected {
+    background-color: #3333db !important;
+  }
+
+  .ce-inline-toolbar--showed {
+    color: black;
+  }

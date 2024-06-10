@@ -39,17 +39,17 @@ function show({ params }: path) {
                 <Breadcrumb className="ps-4 w-full">
                     <BreadcrumbList>
                         <BreadcrumbItem>
-                            {pages.page}
+                            <BreadcrumbLink href={`/http/show/${pages.page}`} >{pages.page}</BreadcrumbLink>
                         </BreadcrumbItem>
                         <BreadcrumbSeparator />
                         <BreadcrumbItem>
-                            {pages.subpage}
+                            <BreadcrumbLink href={`/http/show/${pages.page}/${pages.subpage}`} >{pages.subpage}</BreadcrumbLink>
                         </BreadcrumbItem>
                     </BreadcrumbList>
                 </Breadcrumb>
 
             </div>
-            <div className=" w-[768px] pt-10">
+            <div className=" w-[768px] pt-8">
                 <Editor page={pages} />
             </div>
         </>
