@@ -35,7 +35,7 @@ export async function handler(folderName: string) {
     const fileContent = `
       {
         "label": "${folderName}",
-        "link": "/http/show/${folderName}",
+        "link": "/http/admin/${folderName}",
         "isParent": true,
         "subMenu": []
       }`;
@@ -54,7 +54,7 @@ export async function handler(folderName: string) {
   // Ocorre um erro ao usar o redirect dentro o try catch
   if (message === 'Pasta criada com sucesso.') {
     // Redirect para url criada
-    redirect(`/http/show/${folderName}`);
+    redirect(`/http/admin/${folderName}`);
   }
 
   return message;

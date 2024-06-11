@@ -53,7 +53,7 @@ export async function createSubMenu(item: string, subItem: string = '') {
             if (!exists) {
                 content = `{
                     "label": "${subItem}",
-                    "link": "/http/show/${item}/${subItem}",
+                    "link": "/http/admin/${item}/${subItem}",
                     "content": []
                 }`;
                 message = "SubMenu Criado com sucesso.";
@@ -72,7 +72,7 @@ export async function createSubMenu(item: string, subItem: string = '') {
     // Ocorre um erro ao usar o redirect dentro o try catch
     if (message === 'SubMenu Criado com sucesso.') {
         // Redirect para url criada
-        redirect(`/http/show/${item}/${subItem}`);
+        redirect(`/http/admin/${item}/${subItem}`);
     }
     return message;
 }

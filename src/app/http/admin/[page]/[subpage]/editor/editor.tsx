@@ -1,8 +1,10 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 
 import EditorJS, { ToolConstructable } from '@editorjs/editorjs';
+
+import userContext from '@/app/context/userContext';
 
 // @ts-ignore
 import Header from '@editorjs/header';
@@ -46,6 +48,10 @@ const RenderEditor = (ElementId: string, page: any) => {
     api: 'http://localhost:3000/api/chat',
   });
 
+  const { isAdmin, setIsAdmin } = useContext(userContext);
+  console.log(isAdmin)
+  const [refreshIsAdmin, setRefreshIsAdmin] = useState(isAdmin);
+
   const [editorJS, setEditorJS] = useState(null);
   const [color, setColor] = useState('gray');
   const [isFocused, setFocused] = useState(false);
@@ -64,11 +70,11 @@ const RenderEditor = (ElementId: string, page: any) => {
         editor = new EditorJS({
           holder: ElementId,
           autofocus: true,
-          //readOnly: true,
+          //readOnly: isAdmin,
           tools: {
             header: {
               class: Header,
-              shortcut: 'CMD+SHIFT+H',
+              //shortcut: 'CMD+SHIFT+H',
               tunes: ['tune'],
             },
             paragraph: {
@@ -100,7 +106,7 @@ const RenderEditor = (ElementId: string, page: any) => {
             warning: {
               class: Warning,
               inlineToolbar: true,
-              shortcut: 'CMD+SHIFT+W',
+              // shortcut: 'CMD+SHIFT+W',
               config: {
                 titlePlaceholder: 'Title',
                 messagePlaceholder: 'Message',
@@ -109,7 +115,7 @@ const RenderEditor = (ElementId: string, page: any) => {
             quote: {
               class: Quote,
               inlineToolbar: true,
-              shortcut: 'CMD+SHIFT+O',
+              // shortcut: 'CMD+SHIFT+O',
               config: {
                 quotePlaceholder: 'Enter a quote',
                 captionPlaceholder: 'Quote\'s author',
@@ -117,7 +123,7 @@ const RenderEditor = (ElementId: string, page: any) => {
             },
             Marker: {
               class: Marker,
-              shortcut: 'CMD+SHIFT+M',
+              // shortcut: 'CMD+SHIFT+M',
             },
             checklist: {
               class: Checklist,
@@ -176,7 +182,7 @@ const RenderEditor = (ElementId: string, page: any) => {
           },
           onChange: () => {
             setTimeout(() => {
-              let lostFocus = onSave(page);
+              onSave(page);
               setColor('gray');
             }, 1000);
             setColor('green');
@@ -188,7 +194,7 @@ const RenderEditor = (ElementId: string, page: any) => {
     } else {
       return
     }
-  })
+  });
 
   useEffect(() => {
     if (!editorJS) return
@@ -205,6 +211,11 @@ const RenderEditor = (ElementId: string, page: any) => {
     }
   }, [ElementId, editorJS])
 
+  useEffect(() => {
+    if (!editorJS) return
+    editor.readOnly.toggle(!isAdmin)
+  }, [editorJS, isAdmin])
+
   const editorData = [editorJS, color, isFocused];
   return editorData;
 }
@@ -216,13 +227,8 @@ interface EditorProps {
 
 export default function Editor({ page }: any) {
 
-  const [editorLostFocus, setEditorLostFocus] = useState(false);
-
   // Defina aqui o ID para o elemento onde o Editor.js será renderizado
   const elementId = 'editorjs';
-
-  let teste = () => AI("abacate");
-
 
   let editorData = RenderEditor(elementId, page);
 

@@ -17,13 +17,6 @@ import {
     AccordionTrigger,
 } from "@/components/ui/accordion";
 
-// import {
-//     Tooltip,
-//     TooltipContent,
-//     TooltipProvider,
-//     TooltipTrigger,
-// } from "@/components/ui/tooltip"
-
 import { Tooltip } from "@nextui-org/tooltip";
 
 import {
@@ -34,8 +27,9 @@ import {
     SquarePlus,
     X
 } from "lucide-react";
-import { useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { toast } from "sonner";
+import userContext from "@/app/context/userContext";
 
 interface menu {
     label: string;
@@ -57,7 +51,7 @@ interface props {
     setOpenDelFolderPopup: any,
     menuName: any,
     setMenuSubName: any,
-    setOpenDelFilePopup: any
+    setOpenDelFilePopup: any,
 }
 
 function MenuAccordion({ menu, setSubItemMenu, itemMenu, subItemMenu, i, setRefreshMenu, setOpenDelFolderPopup, menuName, setMenuSubName,
@@ -65,6 +59,8 @@ function MenuAccordion({ menu, setSubItemMenu, itemMenu, subItemMenu, i, setRefr
 }: props) {
 
     const pathname = usePathname();
+
+    const { isAdmin, setIsAdmin } = useContext(userContext);
 
     // Rename Folder
     interface FolderState {
@@ -97,10 +93,6 @@ function MenuAccordion({ menu, setSubItemMenu, itemMenu, subItemMenu, i, setRefr
         oldNameFile: '',
         newNameFile: '',
     });
-
-    // Popup
-    // const [openDelFolderPopup, setOpenDelFolderPopup] = useState(false);
-    // const [openDelFilePopup, setOpenDelFilePopup] = useState(false);
 
     /* 
         FUNCTIONS
@@ -248,8 +240,12 @@ function MenuAccordion({ menu, setSubItemMenu, itemMenu, subItemMenu, i, setRefr
                 key={`${menu}-item-${i}`}
                 value={`item-${i}`}
                 className="border-b-0"
-                onMouseEnter={() => setIconHoverRenameMenu({ index: i })}
-                onMouseLeave={() => setIconHoverRenameMenu({ index: 'none' })}
+                onMouseEnter={() => {
+                    if (isAdmin) setIconHoverRenameMenu({ index: i });
+                }}
+                onMouseLeave={() => {
+                    if (isAdmin) setIconHoverRenameMenu({ index: 'none' });
+                }}
             >
                 <Link
                     key={`${menu}-link-${i}`}
@@ -265,12 +261,11 @@ function MenuAccordion({ menu, setSubItemMenu, itemMenu, subItemMenu, i, setRefr
                     >
 
                         <span key={`${menu}-span-${i}`} className="inline-flex gap-1 gap-x-2 items-center justify-center">
-                            {/* {menu.icon} {menu.label} */}
                             <FolderClosed className="w-4 h-4" />
                             {
                                 showInputFolder?.index === i
                                     ? (
-                                        <div className="inline-flex items-center justify-center">
+                                        <div className="inline-flex items-center justify-start">
                                             <Input
                                                 key={`${menu}-inpput-${i}`}
                                                 id={menu.label}
@@ -278,6 +273,7 @@ function MenuAccordion({ menu, setSubItemMenu, itemMenu, subItemMenu, i, setRefr
                                                 className="w-20 h-6"
                                                 onClick={(e) => e.preventDefault()}
                                                 onChange={handleRenameInputFolder}
+                                                autoFocus
                                             />
                                             <Check
                                                 className="w-3 h-3 ms-1 hover:text-green-500"
@@ -393,18 +389,18 @@ function MenuAccordion({ menu, setSubItemMenu, itemMenu, subItemMenu, i, setRefr
                         return (
                             <div
                                 key={`${subIndex}-${i}`}
-                                className="flex flex-col w-full relative"
+                                className="flex flex-col w-full relative mt-2"
                                 onMouseEnter={() => {
-                                    setIconHoverRenameSubMenu({ subIndex: `${subItem}-${subIndex}-${i}` })
+                                    if (isAdmin) setIconHoverRenameSubMenu({ subIndex: `${subItem}-${subIndex}-${i}` })
                                 }}
                                 onMouseLeave={() => {
-                                    setIconHoverRenameSubMenu({ subIndex: 'none' })
+                                    if (isAdmin) setIconHoverRenameSubMenu({ subIndex: 'none' })
                                 }}
                             >
                                 {
                                     showInputFile?.subIndex === `${subItem}-${subIndex}-${i}`
                                         ? (
-                                            <div key={`${menu}-subDiv-${i}`} className="inline-flex items-center justify-center">
+                                            <div key={`${menu}-subDiv-${i}`} className="inline-flex items-center ms-6">
                                                 <Input
                                                     id={`${subItem}-${subIndex}-${i}`}
                                                     placeholder={subItem.label}
@@ -509,26 +505,29 @@ function MenuAccordion({ menu, setSubItemMenu, itemMenu, subItemMenu, i, setRefr
                             </div>
                         );
                     })}
-                    <div key={`${menu}-div3-${i}`} className="flex flex-col items-center justify-center gap-2  bg-background p-2 mt-1">
-                        {/* <h3 className="pe-4">Adicionar Sub Menu</h3> */}
-                        <div className="inline-flex gap-1 px-2 items-center">
-                            <Input
-                                id={`${menu.label}-${i}`}
-                                className="w-[40px]} h-6"
-                                onChange={(e) => handleSubItemMenu(e, i)}
-                                placeholder="Add SubMenu"
-                                value={inputFileContent.subItem === i ? inputFileContent.content : ''}
-                            />
-                            {
-                                iconHoverSubMenu && (
-                                    <SquarePlus
-                                        className="w-4 h-4 text-green-700 hover:text-green-400 ms-2 hover:cursor-pointer"
-                                        onClick={() => fileCreate(menu.label)}
-                                    />
-                                )
-                            }
+                    {
+                        isAdmin &&
+                        <div key={`${menu}-div3-${i}`} className="flex flex-col items-center justify-center gap-2  bg-background p-2 mt-1">
+                            {/* <h3 className="pe-4">Adicionar Sub Menu</h3> */}
+                            <div className="inline-flex gap-1 px-2 items-center">
+                                <Input
+                                    id={`${menu.label}-${i}`}
+                                    className="w-[40px]} h-6"
+                                    onChange={(e) => handleSubItemMenu(e, i)}
+                                    placeholder="Add SubMenu"
+                                    value={inputFileContent.subItem === i ? inputFileContent.content : ''}
+                                />
+                                {
+                                    iconHoverSubMenu && (
+                                        <SquarePlus
+                                            className="w-4 h-4 text-green-700 hover:text-green-400 ms-2 hover:cursor-pointer"
+                                            onClick={() => fileCreate(menu.label)}
+                                        />
+                                    )
+                                }
+                            </div>
                         </div>
-                    </div>
+                    }
 
                 </AccordionContent>
             </AccordionItem>

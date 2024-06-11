@@ -1,7 +1,7 @@
 
       {
-        "label": "junior",
-        "link": "/http/show/junior",
+        "label": "carta",
+        "link": "/http/admin/carta",
         "isParent": true,
         "subMenu": []
       }

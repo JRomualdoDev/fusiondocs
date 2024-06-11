@@ -1,7 +1,7 @@
 
       {
         "label": "teste",
-        "link": "/http/show/teste",
+        "link": "/http/admin/teste",
         "isParent": true,
         "subMenu": []
       }

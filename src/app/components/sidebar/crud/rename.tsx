@@ -29,7 +29,7 @@ export async function renameFolder(folderConfig: FolderState) {
         let parsedData = JSON.parse(data);
         // Modifica o label e o link
         parsedData.label = folderConfig.newNameFolder;
-        parsedData.link = `/http/show/${folderConfig.newNameFolder}`
+        parsedData.link = `/http/admin/${folderConfig.newNameFolder}`
         // Escreve o arquivo index
         await fs.writeFile(indexFilePath, JSON.stringify(parsedData));
 
@@ -39,7 +39,7 @@ export async function renameFolder(folderConfig: FolderState) {
             if (file !== 'index.json') {
                 let data = await fs.readFile(folderPath + '/' + file, 'utf8');
                 let parsedData = JSON.parse(data);
-                parsedData.link = `/http/show/${folderConfig.newNameFolder}/${parsedData.label}`;
+                parsedData.link = `/http/admin/${folderConfig.newNameFolder}/${parsedData.label}`;
                 await fs.writeFile(folderPath + '/' + file, JSON.stringify(parsedData));
             }
         }
@@ -89,7 +89,7 @@ export async function renameFile(fileConfig: FileState, nameFolder: string) {
         let parsedData = JSON.parse(data);
         // Modifica o label e o link
         parsedData.label = fileConfig.newNameFile;
-        parsedData.link = `/http/show/${nameFolder}/${fileConfig.newNameFile}`
+        parsedData.link = `/http/admin/${nameFolder}/${fileConfig.newNameFile}`
         // Escreve o arquivo index
         await fs.writeFile(indexNewFilePath, JSON.stringify(parsedData));
 
@@ -99,7 +99,7 @@ export async function renameFile(fileConfig: FileState, nameFolder: string) {
         //     if (file !== 'index.json') {
         //         let data = await fs.readFile(folderPath + '/' + file, 'utf8');
         //         let parsedData = JSON.parse(data);
-        //         parsedData.link = `/http/show/${folderConfig.newNameFolder}/${parsedData.label}`;
+        //         parsedData.link = `/http/admin/${folderConfig.newNameFolder}/${parsedData.label}`;
         //         await fs.writeFile(folderPath + '/' + file, JSON.stringify(parsedData));
         //     }
         // }

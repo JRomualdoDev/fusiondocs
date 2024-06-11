@@ -10,9 +10,9 @@ import { usePathname } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator"
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import { loadMenu } from "./loadMenu"
 import { handler } from "./crud/createFolder";
@@ -23,6 +23,7 @@ import { delFolder, delFile } from "./crud/delete";
 import {
     FileText,
     FolderPlus,
+    Users,
 } from "lucide-react";
 
 import { PopupDeleteFolder } from "./popup/deleteFolder";
@@ -30,11 +31,15 @@ import { PopupDeleteFile } from "./popup/deleteFile";
 import MenuAccordion from "./components/accordion";
 import { toast } from "sonner";
 import DropMenu from "./components/dropmenu";
+import userContext from "@/app/context/userContext";
 
 // function Sidebar({ className, menus }: SidebarProps) {
 function Sidebar() {
 
     const pathname = usePathname();
+
+    // // Context
+    const { isAdmin, setIsAdmin } = useContext(userContext);
 
     const [inputFolderContent, setInputFolderContent] = useState("");
 
@@ -43,6 +48,9 @@ function Sidebar() {
     const [menuSubName, setMenuSubName] = useState('');
     const [refreshMenu, setRefreshMenu] = useState(false);
     const [iconHoverMenu, setIconHoverMenu] = useState(false);
+
+    const [refreshIsAdmin, setRefreshIsAdmin] = useState(false);
+
 
     const [itemMenu, setItemMenu] = useState("");
     const [subItemMenu, setSubItemMenu] = useState("");
@@ -181,9 +189,7 @@ function Sidebar() {
                                             <Link
                                                 key={`${menu}-${i}`}
                                                 className={`${buttonVariants({
-                                                    //size: "sm",
                                                     variant: pathname === menu.link ? "default" : "ghost",
-                                                    //align: "flexLeft",
                                                 })} w-full !items-start !justify-start`}
                                                 href={menu.link}
                                             >
@@ -196,34 +202,50 @@ function Sidebar() {
                                     }
                                 })
                             }
-                            <div
-                                className="flex flex-col items-center justify-center gap-2 p-2 mt-4"
-                                onMouseEnter={() => setIconHoverMenu(true)}
-                                onMouseLeave={() => setIconHoverMenu(false)}
-                            >
-                                <Separator />
-                                <div className="inline-flex gap-1 px-2 items-center mt-2">
-                                    <Input
-                                        className="w-[40px]} h-6"
-                                        onChange={handleItemMenu}
-                                        placeholder="Add Menu"
-                                        value={inputFolderContent}
-                                    />
-                                    {
-                                        iconHoverMenu &&
-                                        <FolderPlus
-                                            className="w-6 h-6 text-green-700 hover:text-green-400 ms-2 hover:cursor-pointer"
-                                            onClick={() => folderCreate()}
+                            {
+                                isAdmin &&
+                                <div
+                                    className="flex flex-col items-center justify-center gap-2 p-2 mt-4"
+                                    onMouseEnter={() => setIconHoverMenu(true)}
+                                    onMouseLeave={() => setIconHoverMenu(false)}
+                                >
+                                    <Separator />
+                                    <div className="inline-flex gap-1 px-2 items-center mt-2">
+                                        <Input
+                                            className="w-[40px]} h-6"
+                                            onChange={handleItemMenu}
+                                            placeholder="Add Menu"
+                                            value={inputFolderContent}
                                         />
-                                    }
+                                        {
+                                            iconHoverMenu &&
+                                            <FolderPlus
+                                                className="w-6 h-6 text-green-700 hover:text-green-400 ms-2 hover:cursor-pointer"
+                                                onClick={() => folderCreate()}
+                                            />
+                                        }
+                                    </div>
                                 </div>
+                            }
 
-                            </div>
                         </div>
                         {/* <div className="absolute bottom-1 left-4"> */}
                     </ScrollArea>
-                    <div className="ms-4 mt-5">
-                        <DropMenu />
+                    <div className="inline-flex w-full">
+                        <div className="ms-4 mt-5 w-full">
+                            <DropMenu />
+                        </div>
+                        <div className="me-4 mt-5">
+                            <Button
+                                onClick={() => {
+                                    setIsAdmin(!isAdmin);
+                                }}
+                                className="w-12 h-9"
+                                variant="outline"
+                            >
+                                <Users className="w-4 h-4" />
+                            </Button>
+                        </div>
                     </div>
                 </div>
                 {
