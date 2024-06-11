@@ -81,8 +81,8 @@ export default function Page({ params }: any) {
                                                         // href={submenu.link}
                                                         >
                                                             <CardHeader>
-                                                                <CardTitle>{submenu.label}</CardTitle>
-                                                                <CardDescription>{submenu.link}</CardDescription>
+                                                                <CardTitle className="text-ellipsis overflow-hidden">{submenu.label}</CardTitle>
+                                                                <CardDescription className="text-ellipsis overflow-hidden">{submenu.link}</CardDescription>
                                                             </CardHeader>
                                                             {/* <CardContent>
                                                             <p>Card Content</p>

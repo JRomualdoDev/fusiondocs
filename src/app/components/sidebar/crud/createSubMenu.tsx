@@ -22,11 +22,21 @@ export async function createSubMenu(item: string, subItem: string = '') {
     const folderPath = path.join(process.cwd(), `src/app/bd/${item}`);
     const filePath = path.join(`${folderPath}`, `${subItem}.json`);
 
+    // Lê a pasta BD	
+    const files: string[] = await fs.readdir(folderPath);
+
+    // Testa se submenu já existe
+    const exists = files.some((subMenuItem: any) => subMenuItem === subItem);
+    if (exists) {
+        message = 'Submenu já existe!';
+        return message;
+    }
+
     // Pega do load as informaçoes do menu
     const menu = await loadMenu();
 
     // Le a pasta BD
-    const files: string[] = await fs.readdir(folderPath);
+    // const files: string[] = await fs.readdir(folderPath);
 
     // Loop para ler os arquivos dentro das pastas
     for (const folder of files) {

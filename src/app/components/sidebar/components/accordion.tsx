@@ -117,7 +117,7 @@ function MenuAccordion({ menu, setSubItemMenu, itemMenu, subItemMenu, i, setRefr
         let tempItemMenu = '';
 
         // Passar o nome do item para o menu
-        itemMenu === '' ? tempItemMenu = menuLabel : tempItemMenu = itemMenu;
+        tempItemMenu = menuLabel;
 
         if (subItemMenu !== '') tempItemSubMenu = subItemMenu;
 
@@ -202,6 +202,7 @@ function MenuAccordion({ menu, setSubItemMenu, itemMenu, subItemMenu, i, setRefr
 
     // Rename File
     function fileRename(event: React.MouseEvent<SVGSVGElement, MouseEvent>, menuName: string) {
+        console.log(menuName);
         event.preventDefault();
         renameFile(newNameFile, menuName).then((data: string) => {
             toast("Renomeando File.", {

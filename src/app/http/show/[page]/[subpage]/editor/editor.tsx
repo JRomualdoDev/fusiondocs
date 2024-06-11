@@ -23,8 +23,7 @@ const AlignmentTuneTool = require('editorjs-text-alignment-blocktune');
 import Paragraph from '@editorjs/paragraph';
 import AIText from '@alkhipce/editorjs-aitext';
 
-import { useCompletion } from 'ai/react';
-
+import { useChat } from 'ai/react';
 
 import { saveFile } from './saveFile';
 
@@ -34,6 +33,7 @@ import { Circle, CircleCheck, NotebookPenIcon, Save } from 'lucide-react';
 
 import { AlertDialogDemo } from './popup/save';
 import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
 
 // Editor variável
 var editor: any;
@@ -42,11 +42,9 @@ let dataInit: any;
 // Esta função irá garantir que o componente seja renderizado uma única vez
 const RenderEditor = (ElementId: string, page: any) => {
 
-  const { completion, input, setInput, handleInputChange, handleSubmit } = useCompletion({
-    api: '/api/chat',
+  const { messages, input, setInput, handleInputChange, handleSubmit, append } = useChat({
+    api: 'http://localhost:3000/api/chat',
   });
-
-
 
   const [editorJS, setEditorJS] = useState(null);
   const [color, setColor] = useState('gray');
@@ -149,13 +147,19 @@ const RenderEditor = (ElementId: string, page: any) => {
                 callback: (text: any) => {
                   return new Promise(resolve => {
                     console.log(text)
-                    setInput(text);
-                    // handleSubmit(text)
-                    console.log(text)
-                    console.log(completion)
+                    // handleInputChange
+                    // setInput(text);
+                    // handleSubmit;
+                    // console.log(teste)
+
+                    append({
+                      role: 'user',
+                      content: 'Hello, how can I help you?'
+                    })
+
                     setTimeout(() => {
-                      resolve(' ' + completion)
-                      console.log(completion)
+                      resolve(messages)
+                      console.log(messages)
                     }, 1000)
                   })
                 },
@@ -217,6 +221,9 @@ export default function Editor({ page }: any) {
   // Defina aqui o ID para o elemento onde o Editor.js será renderizado
   const elementId = 'editorjs';
 
+  let teste = () => AI("abacate");
+
+
   let editorData = RenderEditor(elementId, page);
 
   return (
@@ -260,8 +267,6 @@ interface EditorProps {
 }
 
 function onSave(page: EditorProps) {
-  let lostFocus = false;
-
   if (editor) {
     editor.save().then((outputData: any) => {
       saveFile(outputData, page).then((data: any) => {
