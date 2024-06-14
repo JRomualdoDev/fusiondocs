@@ -49,7 +49,7 @@ function show({ params }: path) {
                 </Breadcrumb>
 
             </div>
-            <div className=" w-[768px] pt-8">
+            <div className=" w-full pt-8">
                 <Editor page={pages} />
             </div>
         </>

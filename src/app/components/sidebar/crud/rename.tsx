@@ -11,12 +11,12 @@ export async function renameFolder(folderConfig: FolderState) {
 
     let message = '';
 
+    console.log(folderConfig)
     // Limpa a string do nome da pasta para sempre minuscula e sem acentos
-    folderConfig.oldNameFolder = folderConfig.oldNameFolder?.normalize("NFD").replace(/[^a-zA-Z\s]/g, "");
-    folderConfig.newNameFolder = folderConfig.newNameFolder?.normalize("NFD").replace(/[^a-zA-Z\s]/g, "");
-    // Sem espaços
-    folderConfig.oldNameFolder = folderConfig.oldNameFolder?.replace(/\s+/g, '');
-    folderConfig.newNameFolder = folderConfig.newNameFolder?.replace(/\s+/g, '');
+    folderConfig.oldNameFolder = folderConfig.oldNameFolder?.normalize('NFD').replace(/[\u0300-\u036f]/g, "")
+        .replace(/\s/g, "").toLowerCase();
+    folderConfig.newNameFolder = folderConfig.newNameFolder?.normalize('NFD').replace(/[^a-zA-Z0-9]/g, "")
+        .replace(/\s/g, "").toLowerCase();
 
     const folderPath = path.join(process.cwd(), `src/app/bd/${folderConfig.oldNameFolder}`);
     const newFolderPath = path.join(process.cwd(), `src/app/bd/${folderConfig.newNameFolder}`);
@@ -61,19 +61,14 @@ interface FileState {
 }
 
 export async function renameFile(fileConfig: FileState, nameFolder: string) {
-    console.log(fileConfig)
-    console.log(nameFolder)
+
     let message = '';
 
     // Limpa a string do nome da pasta para sempre minuscula e sem acentos
-    fileConfig.oldNameFile = fileConfig.oldNameFile?.normalize("NFD").replace(/[^a-zA-Z\s]/g, "");
-    fileConfig.newNameFile = fileConfig.newNameFile?.normalize("NFD").replace(/[^a-zA-Z\s]/g, "");
-    nameFolder = nameFolder?.normalize("NFD").replace(/[^a-zA-Z\s]/g, "");
-    // Sem espaços
-    fileConfig.oldNameFile = fileConfig.oldNameFile?.replace(/\s+/g, '');
-    fileConfig.newNameFile = fileConfig.newNameFile?.replace(/\s+/g, '');
-    nameFolder = nameFolder?.replace(/\s+/g, '');
-
+    fileConfig.oldNameFile = fileConfig.oldNameFile?.normalize('NFD').replace(/[\u0300-\u036f]/g, "")
+        .replace(/\s/g, "").toLowerCase();
+    fileConfig.newNameFile = fileConfig.newNameFile?.normalize('NFD').replace(/[^a-zA-Z0-9]/g, "")
+        .replace(/\s/g, "").toLowerCase();
 
     const folderPath = path.join(process.cwd(), `src/app/bd/${nameFolder}`);
     // Muda o arquivo index para que o menu mude tbm , label e link
@@ -92,17 +87,6 @@ export async function renameFile(fileConfig: FileState, nameFolder: string) {
         parsedData.link = `/http/admin/${nameFolder}/${fileConfig.newNameFile}`
         // Escreve o arquivo index
         await fs.writeFile(indexNewFilePath, JSON.stringify(parsedData));
-
-        // // Renome todos os links do arquivos da pasta principal
-        // const files: string[] = await fs.readdir(folderPath);
-        // for (const file of files) {
-        //     if (file !== 'index.json') {
-        //         let data = await fs.readFile(folderPath + '/' + file, 'utf8');
-        //         let parsedData = JSON.parse(data);
-        //         parsedData.link = `/http/admin/${folderConfig.newNameFolder}/${parsedData.label}`;
-        //         await fs.writeFile(folderPath + '/' + file, JSON.stringify(parsedData));
-        //     }
-        // }
 
         message = 'Arquivo renomeado com sucesso!';
     }

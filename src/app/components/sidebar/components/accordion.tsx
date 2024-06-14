@@ -45,7 +45,6 @@ interface props {
     },
     i: string,
     setSubItemMenu: any,
-    itemMenu: string,
     subItemMenu: string,
     setRefreshMenu: any,
     setOpenDelFolderPopup: any,
@@ -54,7 +53,7 @@ interface props {
     setOpenDelFilePopup: any,
 }
 
-function MenuAccordion({ menu, setSubItemMenu, itemMenu, subItemMenu, i, setRefreshMenu, setOpenDelFolderPopup, menuName, setMenuSubName,
+function MenuAccordion({ menu, setSubItemMenu, subItemMenu, i, setRefreshMenu, setOpenDelFolderPopup, menuName, setMenuSubName,
     setOpenDelFilePopup
 }: props) {
 
@@ -234,7 +233,7 @@ function MenuAccordion({ menu, setSubItemMenu, itemMenu, subItemMenu, i, setRefr
             key={`${menu}-${i}`}
             type="single"
             collapsible
-            className="w-[220px]"
+            className=""
         >
             <AccordionItem
                 key={`${menu}-item-${i}`}
@@ -407,6 +406,7 @@ function MenuAccordion({ menu, setSubItemMenu, itemMenu, subItemMenu, i, setRefr
                                                     className="w-20 h-6"
                                                     onClick={(e) => e.preventDefault()}
                                                     onChange={handleRenameInputFile}
+                                                    autoFocus
                                                 />
                                                 <Check
                                                     className="w-3 h-3 ms-1 hover:text-green-500"

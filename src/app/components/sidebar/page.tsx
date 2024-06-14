@@ -142,12 +142,10 @@ function Sidebar() {
         });
         // Atualiza o menu
         setRefreshMenu(!refreshMenu);
-
     }
 
     return (
-        <div className="flex flex-col space-y-2 w-[260px] border bg-background">
-            {/* <div className={cn("pb-12", className)}> */}
+        <div className="flex flex-col space-y-2 w-[270px] border bg-background">
             <div className="space-y-4 pb-2">
                 <div className="py-2">
                     <ScrollArea className="min-h-[300px] max-h-screen px-1 relative">
@@ -156,7 +154,7 @@ function Sidebar() {
                                 <Image
                                     src="/logo.png"
                                     width={500}
-                                    height={500}
+                                    height={100}
                                     alt="Picture of the author"
                                 />
                             </div>
@@ -174,7 +172,6 @@ function Sidebar() {
                                                 key={`${menu}-accordion-${i}`}
                                                 menu={menu}
                                                 i={i}
-                                                itemMenu={itemMenu}
                                                 subItemMenu={subItemMenu}
                                                 setSubItemMenu={setSubItemMenu}
                                                 setRefreshMenu={() => setRefreshMenu(!refreshMenu)}
