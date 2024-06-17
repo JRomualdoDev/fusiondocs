@@ -8,8 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "predeploy": "next build",
+    "deploy": "npm run build && gh-pages -d build"
   },
   "dependencies": {
     "@ai-sdk/openai": "^0.0.24",
