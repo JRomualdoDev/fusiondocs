@@ -13,10 +13,6 @@ import {
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 
-import {
-    Circle
-} from "lucide-react"
-
 const Editor = dynamic(() => import("./editor/editor"), {
     ssr: false,
     loading: () => <p>Loading ...</p>,

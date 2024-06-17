@@ -19,6 +19,7 @@ import InlineCode from '@editorjs/inline-code';
 const AlignmentTuneTool = require('editorjs-text-alignment-blocktune');
 import Paragraph from '@editorjs/paragraph';
 import AIText from '@alkhipce/editorjs-aitext';
+import NestedList from '@editorjs/nested-list';
 
 
 export default function Tools(append: any, messages: any) {
@@ -81,6 +82,13 @@ export default function Tools(append: any, messages: any) {
             class: Checklist,
             inlineToolbar: true,
         },
+        list2: {
+            class: NestedList,
+            inlineToolbar: true,
+            config: {
+                defaultStyle: 'unordered'
+            },
+        },
         inlineCode: {
             class: InlineCode,
             shortcut: 'CMD+SHIFT+M',
@@ -104,11 +112,6 @@ export default function Tools(append: any, messages: any) {
                 // this callback function must accept a string and return a Promise<string>
                 callback: (text: any) => {
                     return new Promise(resolve => {
-                        console.log(text)
-                        // handleInputChange
-                        // setInput(text);
-                        // handleSubmit;
-                        // console.log(teste)
 
                         append({
                             role: 'user',

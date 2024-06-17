@@ -19,9 +19,6 @@ export async function saveFile(file: any, page: page) {
     let contentFileSave = JSON.parse(await fs.readFileSync(filepath, 'utf8'));
     contentFileSave = contentFileSave.content.blocks;
 
-    console.log(JSON.stringify(contentFileSave) === JSON.stringify(file.blocks));
-    console.log(JSON.stringify(file.blocks));
-
     // Caso o resultado em string for o mesmo não grave no arquivo
     if (JSON.stringify(contentFileSave) !== JSON.stringify(file.blocks)) {
         const menu = await loadMenu();

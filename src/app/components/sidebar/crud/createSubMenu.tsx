@@ -12,11 +12,10 @@ export async function createSubMenu(item: string, subItem: string = '') {
     let parsedData: string[] = [];
 
     // Limpa a string do nome da pasta para sempre minuscula e sem acentos
-    item = item.normalize("NFD").replace(/[^a-zA-Z\s]/g, "");
-    subItem = subItem.normalize("NFD").replace(/[^a-zA-Z\s]/g, "");
-    // Sem espaços
-    item = item.replace(/\s+/g, '');
-    subItem = subItem.replace(/\s+/g, '');
+    item = item?.normalize('NFD').replace(/[^a-zA-Z0-9]/g, "")
+        .replace(/\s/g, "").toLowerCase();
+    subItem = subItem?.normalize('NFD').replace(/[^a-zA-Z0-9]/g, "")
+        .replace(/\s/g, "").toLowerCase();
 
     // Defina o caminho para a nova pasta e arquivo
     const folderPath = path.join(process.cwd(), `src/app/bd/${item}`);
@@ -34,9 +33,6 @@ export async function createSubMenu(item: string, subItem: string = '') {
 
     // Pega do load as informaçoes do menu
     const menu = await loadMenu();
-
-    // Le a pasta BD
-    // const files: string[] = await fs.readdir(folderPath);
 
     // Loop para ler os arquivos dentro das pastas
     for (const folder of files) {

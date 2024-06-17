@@ -11,10 +11,7 @@ export async function renameFolder(folderConfig: FolderState) {
 
     let message = '';
 
-    console.log(folderConfig)
     // Limpa a string do nome da pasta para sempre minuscula e sem acentos
-    folderConfig.oldNameFolder = folderConfig.oldNameFolder?.normalize('NFD').replace(/[\u0300-\u036f]/g, "")
-        .replace(/\s/g, "").toLowerCase();
     folderConfig.newNameFolder = folderConfig.newNameFolder?.normalize('NFD').replace(/[^a-zA-Z0-9]/g, "")
         .replace(/\s/g, "").toLowerCase();
 
@@ -65,10 +62,9 @@ export async function renameFile(fileConfig: FileState, nameFolder: string) {
     let message = '';
 
     // Limpa a string do nome da pasta para sempre minuscula e sem acentos
-    fileConfig.oldNameFile = fileConfig.oldNameFile?.normalize('NFD').replace(/[\u0300-\u036f]/g, "")
-        .replace(/\s/g, "").toLowerCase();
     fileConfig.newNameFile = fileConfig.newNameFile?.normalize('NFD').replace(/[^a-zA-Z0-9]/g, "")
         .replace(/\s/g, "").toLowerCase();
+
 
     const folderPath = path.join(process.cwd(), `src/app/bd/${nameFolder}`);
     // Muda o arquivo index para que o menu mude tbm , label e link

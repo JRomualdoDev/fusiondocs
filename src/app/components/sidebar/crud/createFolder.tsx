@@ -13,6 +13,11 @@ export async function handler(folderName: string) {
   // Sem espaços
   folderName = folderName.replace(/\s+/g, '');
 
+  // // Limpa a string do nome da pasta para sempre minuscula e sem acentos
+  // folderName = folderName?.normalize('NFD').replace(/[\u0300-\u036f]/g, "")
+  //   .replace(/\s/g, "").toLowerCase();
+
+
   try {
     // Verifica se os nomes da pasta e do arquivo são válidos
     if (!folderName) {

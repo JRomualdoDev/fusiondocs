@@ -157,7 +157,6 @@ export default function Editor({ page }: EditorProps) {
   return (
     <div className="flex flex-col h-[calc(100vh-100px)] w-full p-4">
 
-
       <div className='w-full inline-flex h-[calc(100vh-100px)]'>
         <div className='pt-10 ps-10 w-[1024px]'>
           <div className="flex justify-end xl:pe-[20%] md:pe-[15%] sm:pe-0">
@@ -187,7 +186,7 @@ export default function Editor({ page }: EditorProps) {
           {
             data.blocks?.map((item: { id: string, type: string, data: { text: string, anchor: string } }, i: number) => {
 
-              if (item.type === 'header') {
+              if (item.type === 'header' && item.data.anchor) {
                 return (
                   <div
                     key={`${item}-${i}`}
