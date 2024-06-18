@@ -41,7 +41,7 @@ export default function Index({ pages }: any) {
                         <BreadcrumbList>
                             <BreadcrumbSeparator />
                             <BreadcrumbItem>
-                                {pages.page}
+                                {pages}
                             </BreadcrumbItem>
                         </BreadcrumbList>
                     </Breadcrumb>
@@ -49,7 +49,7 @@ export default function Index({ pages }: any) {
                 <div className="w-full p-3">
                     {
                         menu.map((menu: any, i: any) => {
-                            if (pages.page == menu.label) {
+                            if (pages == menu.label) {
                                 return (
                                     <div key={i}>
                                         <Alert className="w-full mb-4">

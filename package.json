@@ -1,7 +1,7 @@
 {
   "name": "fusiondocs",
   "version": "0.1.0",
-  "homepage": "https://github.com/JRomualdoDev/fusiondocs",
+  "homepage": "https://JRomualdoDev.github.io/react-gh-pages/",
   "private": true,
   "scripts": {
     "dev": "next dev",

@@ -24,10 +24,15 @@ const Editor = dynamic(() => import("./editor/editor"), {
 //     // return pages.map((page: any) => ({
 //     //     slug: page.pages,
 //     // }))
+
+
 // }
 
-export default function PageIndex({ params }: any) {
-    let pages = params;
+export default function PageIndex({ page, subpage }: any) {
+    // let { pages } = params;
+    console.log(page, subpage)
+
+    let pages = { page, subpage };
 
     return (
         <>
@@ -35,11 +40,11 @@ export default function PageIndex({ params }: any) {
                 <Breadcrumb className="ps-4 w-full">
                     <BreadcrumbList>
                         <BreadcrumbItem>
-                            <BreadcrumbLink href={`/http/show/${pages.page}`} >{pages.page}</BreadcrumbLink>
+                            <BreadcrumbLink href={`/http/show/${page}`} >{page}</BreadcrumbLink>
                         </BreadcrumbItem>
                         <BreadcrumbSeparator />
                         <BreadcrumbItem>
-                            <BreadcrumbLink href={`/http/show/${pages.page}/${pages.subpage}`} >{pages.subpage}</BreadcrumbLink>
+                            <BreadcrumbLink href={`/http/show/${page}/${subpage}`} >{subpage}</BreadcrumbLink>
                         </BreadcrumbItem>
                     </BreadcrumbList>
                 </Breadcrumb>

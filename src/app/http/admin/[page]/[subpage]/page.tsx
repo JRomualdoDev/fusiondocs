@@ -2,34 +2,34 @@ import { loadMenu } from "@/app/components/sidebar/loadMenu";
 import PageIndex from "./pageIndex";
 
 
-interface path {
-    params: {
-        page: string,
-        subpage: string
-    }
+// interface path {
+//     pages: {
+//         menu: string,
+//         submenu: string
+//     }
 
-}
+// }
 
 export async function generateStaticParams() {
     const menu = await loadMenu();
+    let pages: any = [];
 
-    // console.log(menu)
-    // const pages = await fetch('http://localhost:3000/nextjs-github-pages/http/').then((res) => res.json()).catch((err) => console.log(err))
-    // console.log(pages)
-    return menu.map((menu: any) => ({
-        pages: {
-            menu: menu.label,
-            submenu: menu.subMenu.label
-        },
-    }))
+    let teste = menu.map((menu: any) => {
+        return menu.subMenu.map((submenu: any) => {
+            return { page: menu.label, subpage: submenu.label }
+        })
+    }).flat();
+
+    return teste
 }
 
-function show({ params }: path) {
+function show({ params }: any) {
 
+    let { page, subpage } = params;
 
     return (
         <>
-            <PageIndex pages={params} />
+            <PageIndex page={page} subpage={subpage} />
         </>
     )
 }

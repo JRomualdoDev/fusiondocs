@@ -9,26 +9,18 @@ import Index from "./pageIndex";
 export async function generateStaticParams() {
     const menu = await loadMenu();
 
-    // console.log(menu)
-    // const pages = await fetch('http://localhost:3000/nextjs-github-pages/http/').then((res) => res.json()).catch((err) => console.log(err))
-    // console.log(pages)
-    return menu.map((menu: any) => ({
-        pages: {
-            menu: menu.label,
-            submenu: menu.subMenu.label
-        },
-    }))
+    return menu.map((menu: any) => ({ page: menu.label }))
 }
 
 export default async function Page({ params }: any) {
 
 
     // let pages = params;
-    let { pages } = params;
-    console.log(pages)
+    let { page } = params;
+    console.log(page)
 
 
     return (
-        <Index pages={pages} />
+        <Index pages={page} />
     )
 }

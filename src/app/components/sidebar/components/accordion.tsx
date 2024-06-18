@@ -233,7 +233,7 @@ function MenuAccordion({ menu, setSubItemMenu, subItemMenu, i, setRefreshMenu, s
             key={`${menu}-${i}`}
             type="single"
             collapsible
-            className=""
+            className="w-[245px]"
         >
             <AccordionItem
                 key={`${menu}-item-${i}`}
@@ -507,7 +507,7 @@ function MenuAccordion({ menu, setSubItemMenu, subItemMenu, i, setRefreshMenu, s
                     })}
                     {
                         isAdmin &&
-                        <div key={`${menu}-div3-${i}`} className="flex flex-col items-center justify-center gap-2  bg-background p-2 mt-1">
+                        <div key={`${menu}-div3-${i}`} className="flex flex-col items-start justify-start gap-2  bg-background p-2 mt-1 w-60">
                             {/* <h3 className="pe-4">Adicionar Sub Menu</h3> */}
                             <div className="inline-flex gap-1 px-2 items-center">
                                 <Input

@@ -152,7 +152,7 @@ function Sidebar() {
                         <div className="space-y-1 p-2 h-[calc(100vh-82px)] flex flex-col">
                             <div className="mb-8">
                                 <Image
-                                    src="/logo.png"
+                                    src="./logo.png"
                                     width={500}
                                     height={100}
                                     alt="Picture of the author"
@@ -202,7 +202,7 @@ function Sidebar() {
                             {
                                 isAdmin &&
                                 <div
-                                    className="flex flex-col items-center justify-center gap-2 p-2 mt-4"
+                                    className="flex flex-col items-start justify-start gap-2 p-2 mt-4 w-60"
                                     onMouseEnter={() => setIconHoverMenu(true)}
                                     onMouseLeave={() => setIconHoverMenu(false)}
                                 >
