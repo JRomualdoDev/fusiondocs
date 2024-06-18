@@ -17,7 +17,6 @@ export default async function Page({ params }: any) {
 
     // let pages = params;
     let { page } = params;
-    console.log(page)
 
 
     return (

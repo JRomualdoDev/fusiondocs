@@ -151,12 +151,12 @@ function Sidebar() {
                     <ScrollArea className="min-h-[300px] max-h-screen px-1 relative">
                         <div className="space-y-1 p-2 h-[calc(100vh-82px)] flex flex-col">
                             <div className="mb-8">
-                                <Image
+                                {/* <Image
                                     src="./logo.png"
                                     width={500}
                                     height={100}
                                     alt="Picture of the author"
-                                />
+                                /> */}
                             </div>
                             {
                                 menu.map((menu: any, i: any) => {
