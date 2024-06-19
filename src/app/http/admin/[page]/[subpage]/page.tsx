@@ -29,7 +29,7 @@ export async function generateStaticParams(): Promise<Params[]> {
     }).flat();
 }
 
-export default async function show({ params }: any) {
+export default async function Page({ params }: any) {
 
     let { page, subpage } = params;
 
