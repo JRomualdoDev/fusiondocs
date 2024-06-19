@@ -29,7 +29,7 @@ export async function generateStaticParams(): Promise<Params[]> {
     }).flat();
 }
 
-function show({ params }: any) {
+export default async function show({ params }: any) {
 
     let { page, subpage } = params;
 
@@ -39,5 +39,3 @@ function show({ params }: any) {
         </>
     )
 }
-
-export default show;
