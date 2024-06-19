@@ -18,19 +18,8 @@ const Editor = dynamic(() => import("./editor/editor"), {
     loading: () => <p>Loading ...</p>,
 });
 
-// export async function generateStaticParams() {
-//     // const pages = await fetch('http://localhost:3000/api/page').then((res) => res.json()).catch((err) => console.log(err))
-//     // console.log(pages)
-//     // return pages.map((page: any) => ({
-//     //     slug: page.pages,
-//     // }))
-
-
-// }
-
 export default function PageIndex({ page, subpage }: any) {
     // let { pages } = params;
-    console.log(page, subpage)
 
     let pages = { page, subpage };
 
