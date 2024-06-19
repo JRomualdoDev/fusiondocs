@@ -20,7 +20,9 @@ export async function generateStaticParams(): Promise<Params[]> {
     return menu.map((menu: any) => ({ page: menu.label }))
 }
 
-export default async function Page({ params }: any) {
+export const dynamicParams = true;
+
+export default async function Page({ params }: { params: { page: string } }) {
 
 
     // let pages = params;

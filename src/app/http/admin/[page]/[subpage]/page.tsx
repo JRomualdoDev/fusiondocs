@@ -29,7 +29,9 @@ export async function generateStaticParams(): Promise<Params[]> {
     }).flat();
 }
 
-export default async function Page({ params }: any) {
+export const dynamicParams = true;
+
+export default async function Page({ params }: { params: { page: string, subpage: string } }) {
 
     let { page, subpage } = params;
 
