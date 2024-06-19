@@ -10,17 +10,23 @@ import PageIndex from "./pageIndex";
 
 // }
 
-export async function generateStaticParams() {
-    const menu = await loadMenu();
-    let pages: any = [];
+type Params = {
+    page: string;
+    subpage: string;
+}
 
-    let teste = menu.map((menu: any) => {
+export async function generateStaticParams(): Promise<Params[]> {
+    const menu = await loadMenu();
+
+    if (!menu || menu.length == 0) {
+        return [{ page: 'not-found', subpage: 'not-found' }]
+    }
+
+    return menu.map((menu: any) => {
         return menu.subMenu.map((submenu: any) => {
             return { page: menu.label, subpage: submenu.label }
         })
     }).flat();
-
-    return teste
 }
 
 function show({ params }: any) {
