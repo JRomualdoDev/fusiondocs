@@ -1,0 +1,1 @@
+self.__SSG_MANIFEST=new Set(["\u002Fhttp\u002Fadmin\u002F[page]","\u002Fhttp\u002Fadmin\u002F[page]\u002F[subpage]"]);self.__SSG_MANIFEST_CB&&self.__SSG_MANIFEST_CB()
