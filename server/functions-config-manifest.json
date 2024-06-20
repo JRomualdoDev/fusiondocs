@@ -1,1 +1,1 @@
-{"version":1,"functions":{"/api/chat":{"maxDuration":30},"/http/admin/[page]":{},"/http/admin/[page]/[subpage]":{}}}
+{"version":1,"functions":{"/api/chat":{"maxDuration":30},"/http/admin/[page]/[subpage]":{},"/http/admin/[page]":{}}}
