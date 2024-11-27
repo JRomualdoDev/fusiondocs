@@ -7,10 +7,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "predeploy": "next build && type nul > out/.nojekyll",
-    "deploy": "gh-pages -d out -t true",
-    "postdeploy": "git push --follow-tags"
+    "lint": "next lint"
   },
   "dependencies": {
     "@ai-sdk/openai": "^0.0.24",

@@ -6,8 +6,9 @@ const nextConfig = {
      *
      * @see https://nextjs.org/docs/app/building-your-application/deploying/static-exports
      */
-    //output: "export",
-    distDir: "out",
+    output: "export",
+    // distDir: "out",
+    // assetPrefix: "./",
     // reactStrictMode: true,
 
     /**
